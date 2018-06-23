@@ -1,4 +1,4 @@
-{% load i18n staticfiles %}
+{% load i18n staticfiles pipeline %}
 
 <!DOCTYPE html>
 <html>
@@ -15,7 +15,7 @@
     <!-- END FAVICONS -->
 
 {% block css %}
-    <!-- ??? -->
+    {% stylesheet 'all' %}
 {% endblock %}
 
 {% block in_head %}
@@ -44,11 +44,6 @@
 {% endblock %}
 
 {% block header %}
-    {% if not user.is_authenticated %}
-        <!-- ??? -->
-    {% else %}
-        <!-- ??? -->
-    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -59,7 +54,7 @@
 {% endblock %}
 
 {% block js %}
-    <!-- ??? -->
+    {% javascript 'all' %}
 {% endblock %}
 
 {% block end_body %}

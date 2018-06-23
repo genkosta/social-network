@@ -3,7 +3,7 @@ Django settings.
 """
 
 import os
-# from .pipeline import PIPELINE
+from .pipeline import PIPELINE
 
 PROJECT_NAME = 'social-network'
 PASSWORD_DB_DEV = 'WA7uUG5qrNs5J7V9'
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # add-ons
+    'pipeline',
     # apps
     PROJECT_NAME,
 ]
@@ -95,7 +96,6 @@ MEDIA_ROOT = root_path('media')
 STATIC_URL = '/static/'
 
 STATIC_ROOT = '/tmp/{}/static'.format(PROJECT_NAME)
-# STATIC_ROOT = '/tmp/{}/static'.format(PROJECT_NAME)  # django-pipeline
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -108,11 +108,11 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    # 'pipeline.finders.PipelineFinder',  # django-pipeline
+    'pipeline.finders.PipelineFinder',  # For django-pipeline
 )
 
-# django-pipeline
-# STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+# For django-pipeline
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
