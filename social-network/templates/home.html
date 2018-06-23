@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load i18n staticfiles %}
+
+
+{% block meta_tags %}
+    <title>{{ msg }}</title>
+{% endblock %}
+
+{% block css %}
+    <!-- START VENDOR STYLES -->
+    {{ block.super }}
+    <!-- END VENDOR STYLES -->
+{% endblock %}
+
+{% block in_head %}
+{% endblock %}
+
+{% block modals %}
+    <!-- START MODALS -->
+    {{ block.super }}
+    {# {% include 'includes/modals_login.html' %} #}
+    <!-- END MODALS -->
+{% endblock %}
+
+{% block menu %}
+    <!-- START SIDEBPANEL-->
+    {# {% include 'includes/menu.html' with level_1='about' %} #}
+    <!-- END SIDEBPANEL-->
+{% endblock %}
+
+{% block header %}
+    <!-- START HEADER -->
+    {{ block.super }}
+    <!-- END HEADER -->
+{% endblock %}
+
+{% block content %}
+    <!-- START CONTENT -->
+    <h1>{{ msg }}</h1>
+    <!-- END CONTENT -->
+{% endblock %}
+
+{% block footer %}
+    <!-- START FOOTER -->
+    {{ block.super }}
+    <!-- END FOOTER -->
+{% endblock %}
+
+{% block js %}
+    <!-- START VENDOR SCRIPTS -->
+    {{ block.super }}
+    <!-- END VENDOR SCRIPTS -->
+{% endblock %}
+
+{% block end_body %}
+{% endblock %}

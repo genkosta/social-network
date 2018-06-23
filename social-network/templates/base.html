@@ -1,0 +1,69 @@
+{% load i18n staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+{% block meta_tags %}
+{% endblock %}
+
+    <!-- START FAVICONS -->
+    <link rel="shortcut icon" href="{% static 'img/favicons/favicon.ico' %}" type="image/x-icon" />
+    <link rel="icon" href="{% static 'img/favicons/favicon.ico' %}" type="image/x-icon">
+    <!-- END FAVICONS -->
+
+{% block css %}
+    <!-- ??? -->
+{% endblock %}
+
+{% block in_head %}
+{% endblock %}
+</head>
+
+<body>
+    <!--[if lte IE 9]>
+        <p class="browserupgrade">Вы используете <strong>устаревший</strong> браузер. Пожалуйста
+            <a href="http://browsehappy.com/">обновите свой браузер</a> , чтобы использовать все современные возможности.</p>
+    <![endif]-->
+    <noscript>
+        <div id="id-noscript">
+            <div>
+                Для полной функциональности этого сайта, необходимо включить JavaScript.<br>
+                Вот <a href="http://www.enable-javascript.com/ru/" target="_blank">
+                инструкции, как включить JavaScript в вашем браузере.</a>
+            </div>
+        </div>
+    </noscript>
+
+{% block modals %}
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block header %}
+    {% if not user.is_authenticated %}
+        <!-- ??? -->
+    {% else %}
+        <!-- ??? -->
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block footer %}
+    <!-- ??? -->
+{% endblock %}
+
+{% block js %}
+    <!-- ??? -->
+{% endblock %}
+
+{% block end_body %}
+{% endblock %}
+</body>
+</html>
+

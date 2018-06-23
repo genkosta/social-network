@@ -1,0 +1,12 @@
+{% if STATUS_PROJECT == 'prod' %}
+User-Agent: *
+Disallow: /admin/
+Disallow: /static
+Allow: /
+Host: {{ host }}
+Sitemap: {{ scheme }}://{{ host }}/sitemap.xml
+{% else %}
+User-Agent: *
+Disallow: /
+Host: {{ host }}
+{% endif %}
