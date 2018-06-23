@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # apps
     PROJECT_NAME,
+    'posts',
 ]
 
 MIDDLEWARE = [
