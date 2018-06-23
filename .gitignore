@@ -1,104 +1,49 @@
+### Python ###
 # Byte-compiled / optimized / DLL files
-__pycache__/
 *.py[cod]
-*$py.class
+__pycache__/
+*~
+.directory
+confusables.json
 
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
+### Django ###
 *.log
-local_settings.py
+*.ini
+*.pid
+media/
 db.sqlite3
 
-# Flask stuff:
-instance/
-.webassets-cache
+### Vagrant ###
+.vagrant/
 
-# Scrapy stuff:
-.scrapy
+### Pycharm ###
+.idea
 
-# Sphinx documentation
-docs/_build/
+### Django-sphinxql ###
+binlog.*
+*.conf
+*.spa
+*.spd
+*.spe
+*.sph
+*.spi
+*.spk
+*.spm
+*.spp
+*.sps
+*.tmps
 
-# PyBuilder
-target/
+### Sublime Text ###
+*.sublime-project
+*.sublime-workspace
+tmp*
+*.sublime-settings
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# celery beat schedule file
-celerybeat-schedule
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
+### Rope project settings ###
 .ropeproject
 
-# mkdocs documentation
-/site
+### VisualStudioCode ###
+.vscode/
+.history
+*.code-workspace
 
-# mypy
-.mypy_cache/
