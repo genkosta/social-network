@@ -3,7 +3,7 @@ Django settings.
 """
 
 import os
-from .pipeline import PIPELINE
+from .pipeline_conf import PIPELINE
 
 PROJECT_NAME = 'social-network'
 PASSWORD_DB_DEV = 'WA7uUG5qrNs5J7V9'

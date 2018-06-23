@@ -1,0 +1,29 @@
+/* For <!--[if lte IE 9]> */
+.browserupgrade {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* Message - Necessary to enable JavaScript */
+#id-noscript {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8);
+}
+#id-noscript > div {
+    text-align: center;
+    color: #ccc;
+    font-size: 18px;
+    margin-top: 30%;
+    text-shadow: 1px 1px 1px #000;
+}
+#id-noscript > div > a {
+    font-size: 18px;
+    text-shadow: 1px 1px 1px #000;
+}

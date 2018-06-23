@@ -20,6 +20,7 @@ PIPELINE = {
     'JAVASCRIPT': {
         'all': {
             'source_filenames': (
+                'js/jquery-3.3.1.min.js',
                 'js/custom.js',
             ),
             'output_filename': 'js/all.js',
