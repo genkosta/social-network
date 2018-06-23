@@ -12,6 +12,7 @@ PIPELINE = {
     'STYLESHEETS': {
         'all': {
             'source_filenames': (
+                'plugins/bootstrap/css/bootstrap.css',
                 'css/custom.css',
             ),
             'output_filename': 'css/all.css',
@@ -21,6 +22,8 @@ PIPELINE = {
         'all': {
             'source_filenames': (
                 'js/jquery-3.3.1.min.js',
+                'plugins/bootstrap/js/bootstrap.bundle.js',
+                'plugins/bootstrap/js/bootstrap.js',
                 'js/custom.js',
             ),
             'output_filename': 'js/all.js',
