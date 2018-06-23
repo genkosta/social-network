@@ -53,3 +53,6 @@ QUERYCOUNT = {
     'DISPLAY_DUPLICATES': 5,
     'RESPONSE_HEADER': 'X-DjangoQueryCount-Count'
 }
+
+REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES']\
+    .append('rest_framework.authentication.SessionAuthentication')

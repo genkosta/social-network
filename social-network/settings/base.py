@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # add-ons
     'pipeline',
+    'oauth2_provider',
+    'rest_framework',
     # apps
     PROJECT_NAME,
 ]
@@ -48,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = '{}.urls'.format(PROJECT_NAME)
@@ -124,3 +127,22 @@ DEFAULT_FROM_EMAIL = 'noreply@site.net'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 4194304
+
+# Web API
+CORS_ORIGIN_ALLOW_ALL = True
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope'
+    }
+}
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}

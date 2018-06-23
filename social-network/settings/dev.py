@@ -33,3 +33,6 @@ AUTH_PASSWORD_VALIDATORS = [
 STATIC_ROOT = os.path.abspath(root_path('..', '..', 'static'))
 MEDIA_ROOT = os.path.abspath(root_path('..', '..', 'media'))
 STATUS_PROJECT = 'dev'
+
+REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES']\
+    .append('rest_framework.authentication.SessionAuthentication')
