@@ -5,7 +5,7 @@ Django settings.
 import os
 from .pipeline_conf import PIPELINE
 
-PROJECT_NAME = 'social-network'
+PROJECT_NAME = 'social_network'
 PASSWORD_DB_DEV = 'WA7uUG5qrNs5J7V9'
 PASSWORD_DB_PROD = 'XMh7brCHuWMw32Wa'
 

@@ -35,6 +35,9 @@
     {% for post in posts %}
         <hr>
         <h4><a href="{{ post.get_absolute_url }}" target="_blank">{{ post.title }}</a></h4>
+        {% if post.image %}
+            <a href="{{ post.get_absolute_url }}" target="_blank"><img src="{{ post.middle.url }}" alt="{{ post.title }}"></a>
+        {% endif %}
         <div>{{ post.message }}</div>
         <p>Like: {{ post.like }}</p>
         <hr>

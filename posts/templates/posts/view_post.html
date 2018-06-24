@@ -33,6 +33,7 @@
 {% block content %}
     <!-- START CONTENT -->
     <h4>{{ post.title }}</h4>
+    {% if post.image %}<div><img src="{{ post.middle.url }}" alt="{{ post.title }}"></div>{% endif %}
     <div>{{ post.message }}</div>
     <p>Like: {{ post.like }}</p>
     <!-- END CONTENT -->

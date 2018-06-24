@@ -10,5 +10,6 @@ TokenAdmin.raw_id_fields = ('user',)
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'like', 'created_at', 'updated_at')
+    list_display = ('title', 'admin_thumbnail', 'like', 'created_at', 'updated_at')
     readonly_fields = ('slug', 'like')
+    list_display_links = ('title', 'admin_thumbnail')
