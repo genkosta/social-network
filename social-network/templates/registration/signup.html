@@ -1,0 +1,108 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />
+{{ form.media }}
+<style type="text/css">
+    .form-row #id_username,
+    .form-row #id_first_name,
+    .form-row #id_last_name,
+    .form-row #id_email,
+    .form-row #id_password1,
+    .form-row #id_password2 {
+        clear: both;
+        padding: 8px;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+                box-sizing: border-box;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'home' %}">{{ site_header|default:_('Social Network - Sign up') }}</a></h1>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">
+{% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+</p>
+{% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
+<div id="content-main">
+
+{% if user.is_authenticated %}
+<p class="errornote">
+{% blocktrans trimmed %}
+    You are authenticated as {{ username }}, but are not authorized to
+    access this page. Would you like to login to a different account?
+{% endblocktrans %}
+</p>
+{% endif %}
+
+<form action="{% url 'signup' %}" method="post" id="login-form">{% csrf_token %}
+  <div class="form-row">
+    {{ form.username.errors }}
+    {{ form.username.label_tag }} {{ form.username }}
+    <p class="help">{{ form.username.help_text|safe }}</p>
+  </div>
+  <div class="form-row">
+    {{ form.first_name.errors }}
+    {{ form.first_name.label_tag }} {{ form.first_name }}
+    <p class="help">{{ form.first_name.help_text|safe }}</p>
+  </div>
+  <div class="form-row">
+    {{ form.last_name.errors }}
+    {{ form.last_name.label_tag }} {{ form.last_name }}
+    <p class="help">{{ form.last_name.help_text|safe }}</p>
+  </div>
+  <div class="form-row">
+    {{ form.email.errors }}
+    {{ form.email.label_tag }} {{ form.email }}
+    <p class="help">{{ form.email.help_text|safe }}</p>
+  </div>
+  <div class="form-row">
+    {{ form.password1.errors }}
+    {{ form.password1.label_tag }} {{ form.password1 }}
+    <p class="help">{{ form.password1.help_text|safe }}</p>
+  </div>
+  <div class="form-row">
+    {{ form.password2.errors }}
+    {{ form.password2.label_tag }} {{ form.password2 }}
+    <p class="help">{{ form.password2.help_text|safe }}</p>
+    <input type="hidden" name="next" value="{{ next }}" />
+  </div>
+  {% url 'admin_password_reset' as password_reset_url %}
+  {% if password_reset_url %}
+  <div class="password-reset-link">
+    <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
+  </div>
+  {% endif %}
+  <div class="submit-row">
+    <label>&nbsp;</label><input type="submit" value="{% trans 'Sign up' %}" />
+  </div>
+</form>
+
+</div>
+{% endblock %}

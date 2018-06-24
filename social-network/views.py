@@ -48,28 +48,4 @@ def robots(request):
 
 # Start - Web API ----------------------------------------------------------------------------------
 
-class SignUpView(viewsets.ViewSet):
-    """
-    API -  New User Registration.
-    API - Регистрация нового пользователя.
-    """
-
-    @staticmethod
-    def create(request):
-        form = SignUpForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            response = {'success': 'Successful registration.'}
-            return Response(response)
-
-        response = {}
-        for field, errors in form.errors.items:
-            response[field] = '; '.join(errors)
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
 # End - Web API ------------------------------------------------------------------------------------
