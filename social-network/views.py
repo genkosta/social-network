@@ -48,14 +48,11 @@ def robots(request):
 
 # Start - Web API ----------------------------------------------------------------------------------
 
-class SignUpViewSet(viewsets.ViewSet):
+class SignUpView(viewsets.ViewSet):
     """
     API -  New User Registration.
     API - Регистрация нового пользователя.
-    Request: curl -H "Authorization: Bearer <your_access_token>" http://<hostname>/signup/
     """
-
-    permission_classes = [permissions.AllowAny, TokenHasReadWriteScope]
 
     @staticmethod
     def create(request):

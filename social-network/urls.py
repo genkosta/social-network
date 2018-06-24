@@ -7,6 +7,7 @@ from django.contrib.staticfiles.urls import static
 # Views
 from . import views as main_views
 from posts import views as posts_views
+from django.contrib.auth import views as auth_views
 
 # Web API
 from rest_framework.authtoken import views as authtoken_views
@@ -21,8 +22,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', authtoken_views.obtain_auth_token),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('api/v1/integrations/signup/',
-         main_views.SignUpViewSet.as_view({'post': 'create'}), name='create_user'),
+    # Login
+    path('accounts/login/', auth_views.LoginView.as_view()),
     # Home page
     path('', main_views.HomePageView.as_view(), name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
