@@ -44,8 +44,3 @@ def robots(request):
         'scheme': request.scheme,
         'STATUS_PROJECT': settings.STATUS_PROJECT},
         content_type='text/plain')
-
-
-# Start - Web API ----------------------------------------------------------------------------------
-
-# End - Web API ------------------------------------------------------------------------------------

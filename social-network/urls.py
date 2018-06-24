@@ -6,7 +6,6 @@ from django.contrib.staticfiles.urls import static
 
 # Views
 from . import views as main_views
-from posts import views as posts_views
 from .core import views as core_views
 
 # Web API
@@ -25,6 +24,8 @@ urlpatterns = [
     # Login
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),
+    # Posts
+    path('posts/', include('posts.urls', namespace='posts')),
     # Home page
     path('', main_views.HomePageView.as_view(), name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

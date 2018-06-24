@@ -3,7 +3,7 @@
 
 
 {% block meta_tags %}
-    <title>{{ msg }}</title>
+    <title>{{ post.title }}</title>
 {% endblock %}
 
 {% block css %}
@@ -32,8 +32,9 @@
 
 {% block content %}
     <!-- START CONTENT -->
-    <h1>{{ msg }}</h1>
-    <a href="{% url 'posts:post-list' %}">Post list</a>
+    <h4>{{ post.title }}</h4>
+    <div>{{ post.message }}</div>
+    <p>Like: {{ post.like }}</p>
     <!-- END CONTENT -->
 {% endblock %}
 

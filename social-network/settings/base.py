@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'pipeline',
     'oauth2_provider',
     'rest_framework',
+    'rest_framework.authtoken',
     # apps
     PROJECT_NAME,
     'posts',
