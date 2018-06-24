@@ -46,6 +46,8 @@ def robots(request):
         content_type='text/plain')
 
 
+# Start - Web API ----------------------------------------------------------------------------------
+
 class SignUpViewSet(viewsets.ViewSet):
     """
     API -  New User Registration.
@@ -72,3 +74,5 @@ class SignUpViewSet(viewsets.ViewSet):
         for field, errors in form.errors.items:
             response[field] = '; '.join(errors)
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+# End - Web API ------------------------------------------------------------------------------------
