@@ -8,6 +8,13 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     Serializer -  Users posts.
     Сериализатор - Cообщения пользователей.
     """
+
+    image = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='get_link_avatar',
+        source='cover_and_avatar'
+    )
+
     class Meta:
         model = Post
-        fields = ('title', 'message', 'like')
+        fields = ('image', 'title', 'message', 'like', 'unlike')

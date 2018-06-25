@@ -6,8 +6,8 @@ from pilkit.processors import ResizeToFit, ResizeToFill
 from django.utils.safestring import mark_safe
 
 from django.db.models.signals import post_save, pre_save, pre_delete
-from social_network.core.utils import (cleaning_files_pre_save, cleaning_files_pre_delete,
-                                       validate_image, make_upload_path)
+from social_network.core.models import (cleaning_files_pre_save, cleaning_files_pre_delete,
+                                        validate_image, make_upload_path)
 
 from django.contrib.auth.models import User
 
@@ -38,9 +38,11 @@ class Post(models.Model):
 
     message = models.TextField(verbose_name='Message',
                                max_length=1500,
+                               default='',
                                help_text='Your new message.')
 
-    like = models.IntegerField(verbose_name='Like', default=0)
+    like = models.PositiveIntegerField(verbose_name='Like', blank=True, default=0)
+    unlike = models.PositiveIntegerField(verbose_name='Unlike', blank=True, default=0)
 
     slug = models.SlugField(max_length=100, blank=True, null=True)
 

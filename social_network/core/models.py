@@ -6,6 +6,7 @@ import shutil
 from django.core.exceptions import ValidationError
 from django.db.models.fields.files import FileDescriptor, ImageFileDescriptor
 from imagekit.models import ImageSpecField
+from django.utils.translation import ugettext_lazy as _
 
 
 def validate_image(image):
@@ -14,11 +15,11 @@ def validate_image(image):
     extension = image.name.split('.')[-1]
 
     if not [ext for ext in extension_list if extension == ext]:
-        raise ValidationError('Только файлы формата JPG, PNG или GIF.')
+        raise ValidationError(_('Only JPG, PNG or GIF files.'))
     elif not size:
-        raise ValidationError('Изображение не может быть 0.0 мб')
+        raise ValidationError(_('Image can not be 0 MB.'))
     elif not size or size > 2097152:
-        raise ValidationError('Размер изображения превышает предел 2.0 мб.')
+        raise ValidationError(_('The image size exceeds the limit of 2 MB.'))
 
 
 def make_upload_path(instance, filename):

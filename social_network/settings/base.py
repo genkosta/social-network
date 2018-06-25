@@ -81,7 +81,18 @@ TEMPLATES = [
 WSGI_APPLICATION = '{}.wsgi.application'.format(PROJECT_NAME)
 
 # Internationalization
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
+
+gettext_noop = lambda s: s
+
+LANGUAGES = (
+    ('en', gettext_noop('English')),
+    ('ru', gettext_noop('Russian')),
+)
+
+LOCALE_PATHS = (
+    path('locale'),
+)
 
 SITE_ID = 1
 

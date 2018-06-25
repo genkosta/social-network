@@ -1,0 +1,104 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-25 02:41+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: social_network/core/models.py:18
+msgid "Only JPG, PNG or GIF files."
+msgstr "Только файлы формата JPG, PNG или GIF."
+
+#: social_network/core/models.py:20
+msgid "Image can not be 0 MB."
+msgstr "Изображение не может быть 0 Мб"
+
+#: social_network/core/models.py:22
+msgid "The image size exceeds the limit of 2 MB."
+msgstr "Размер изображения превышает лимит 2 Мб."
+
+#: social_network/settings/base.py:89
+msgid "English"
+msgstr "Английский"
+
+#: social_network/settings/base.py:90
+msgid "Russian"
+msgstr "Русский"
+
+#: social_network/templates/404.html:5 social_network/templates/404.html:9
+msgid "Page not found"
+msgstr ""
+
+#: social_network/templates/404.html:10
+msgid "We're sorry, but the requested page could not be found."
+msgstr ""
+
+#: social_network/templates/500.html:6
+msgid "Server error (500)"
+msgstr ""
+
+#: social_network/templates/500.html:13
+msgid "Server Error <em>(500)</em>"
+msgstr ""
+
+#: social_network/templates/oauth2_provider/application_form.html:9
+msgid "Edit application"
+msgstr ""
+
+#: social_network/templates/oauth2_provider/application_form.html:35
+msgid "Go Back"
+msgstr ""
+
+#: social_network/templates/registration/login.html:9
+msgid "Social Network - Log in"
+msgstr ""
+
+#: social_network/templates/registration/login.html:26
+#: social_network/templates/registration/signup.html:41
+msgid "Please correct the error below."
+msgstr ""
+
+#: social_network/templates/registration/login.html:26
+#: social_network/templates/registration/signup.html:41
+msgid "Please correct the errors below."
+msgstr ""
+
+#: social_network/templates/registration/login.html:42
+#: social_network/templates/registration/signup.html:57
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this "
+"page. Would you like to login to a different account?"
+msgstr ""
+
+#: social_network/templates/registration/login.html:62
+#: social_network/templates/registration/signup.html:99
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: social_network/templates/registration/login.html:66
+msgid "Log in"
+msgstr "Вход"
+
+#: social_network/templates/registration/signup.html:24
+msgid "Social Network - Sign up"
+msgstr "Social Network - Регистрация"
+
+#: social_network/templates/registration/signup.html:103
+msgid "Sign up"
+msgstr "Зарегистрироваться"
