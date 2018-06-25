@@ -46,6 +46,8 @@ class Post(models.Model):
 
     slug = models.SlugField(max_length=100, blank=True, null=True)
 
+    is_disable = models.BooleanField('Is disable?', blank=True, default=False)
+
     created_at = models.DateTimeField(verbose_name='Publication date', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Updated', auto_now=True)
 

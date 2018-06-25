@@ -81,7 +81,7 @@ TEMPLATES = [
 WSGI_APPLICATION = '{}.wsgi.application'.format(PROJECT_NAME)
 
 # Internationalization
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ru'
 
 gettext_noop = lambda s: s
 

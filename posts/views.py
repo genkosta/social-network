@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from django.shortcuts import get_object_or_404
+from django.conf import settings
+
+# Views Classes
 from django.views.generic import ListView
 from django.views.generic import DetailView
 
@@ -8,6 +12,8 @@ from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import mixins
+from .serializers import PostSerializer
 
 # Models
 from .models import Post
@@ -36,6 +42,32 @@ class PostDetail(DetailView):
         post = Post.objects.filter(slug=self.kwargs['slug'])
         return post
 
-# Start - Web API ----------------------------------------------------------------------------------
 
+# Start - Web API ----------------------------------------------------------------------------------
+class AllPostsViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    View all posts.
+    Просмотр всех постов.
+    """
+
+    permission_classes = [permissions.AllowAny, TokenHasReadWriteScope]
+
+    def list(self, request):
+        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
+        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
+        queryset = Post.objects.filter(is_disable=False)
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = PostSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PostSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @staticmethod
+    def retrieve(request, pk=None):
+        queryset = get_object_or_404(Post, pk=pk)
+        serializer = PostSerializer(queryset)
+        return Response(serializer.data)
 # End - Web API ------------------------------------------------------------------------------------

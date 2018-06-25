@@ -10,6 +10,7 @@ from .core import views as core_views
 
 # Web API
 from rest_framework.authtoken import views as authtoken_views
+from posts import views as posts_views
 
 
 urlpatterns = [
@@ -21,7 +22,12 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', authtoken_views.obtain_auth_token),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    # Login
+    # Web API - View all posts
+    path('api/v1/integrations/all-posts/',
+         posts_views.AllPostsViewSet.as_view({'get': 'list'})),
+    path('api/v1/integrations/all-posts/<int:pk>/',
+         posts_views.AllPostsViewSet.as_view({'get': 'retrieve'})),
+    # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),
     # Posts

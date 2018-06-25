@@ -15,12 +15,12 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('image', 'title', 'message', 'like', 'unlike')
+        fields = ('id', 'image', 'title', 'message', 'like', 'unlike')
 
     def get_url_image(self, obj):
         try:
             image_url = obj.middle.url
-            result = 'https://{0}/{1}'.format(self.current_site.domain, image_url)
+            result = 'https://{0}{1}'.format(self.current_site.domain, image_url)
         except ValueError:
             result = ""
         return result
