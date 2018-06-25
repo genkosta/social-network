@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 # Views Classes
 from django.views.generic import ListView
@@ -130,6 +131,32 @@ class UserPostsViewSet(viewsets.ModelViewSet):
             user = request.user
             queryset = form.save(commit=False)
             queryset.user = user
+            queryset.save()
+            serializer = PostSerializer(queryset)
+            return Response(serializer.data)
+        else:
+            response = {}
+            for field, errors in form.errors.items():
+                response[field] = '; '.join(errors)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def update(request, pk=None):
+        user_pk = request.user.pk
+        post = Post.objects.filter(user__pk=user_pk, pk=pk).first()
+
+        if post is None:
+            response = {
+                'error': _('Update error - Post does not belong to the current user')
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        form = CreatePostForm(request.POST, instance=post)
+
+        if form.is_valid():
+            queryset = form.save(commit=False)
+            queryset.like = 0
+            queryset.unlike = 0
             queryset.save()
             serializer = PostSerializer(queryset)
             return Response(serializer.data)

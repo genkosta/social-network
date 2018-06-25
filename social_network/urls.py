@@ -38,6 +38,8 @@ urlpatterns = [
          posts_views.UserPostsViewSet.as_view({'get': 'retrieve'})),
     path('api/v1/integrations/user-posts/create/',
          posts_views.UserPostsViewSet.as_view({'post': 'create'})),
+    path('api/v1/integrations/user-posts/<int:pk>/update/',
+         posts_views.UserPostsViewSet.as_view({'post': 'update'})),
     # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),
