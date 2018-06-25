@@ -36,11 +36,6 @@ urlpatterns = [
          posts_views.PostsViewSet.as_view({'get': 'get_user_posts'})),
     path('api/v1/integrations/user-posts/<int:pk>/',
          posts_views.PostsViewSet.as_view({'get': 'get_user_post'})),
-    # Web API - Create post, Update post
-    path('api/v1/integrations/user-posts/create/',
-         posts_views.PostsViewSet.as_view({'post': 'create'})),
-    path('api/v1/integrations/user-posts/<int:pk>/update/',
-         posts_views.PostsViewSet.as_view({'post': 'update'})),
     # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),
