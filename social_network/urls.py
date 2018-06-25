@@ -22,11 +22,15 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', authtoken_views.obtain_auth_token),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    # Web API - View all posts
+    # Web API - All posts
     path('api/v1/integrations/all-posts/',
          posts_views.AllPostsViewSet.as_view({'get': 'list'})),
     path('api/v1/integrations/all-posts/<int:pk>/',
          posts_views.AllPostsViewSet.as_view({'get': 'retrieve'})),
+    path('api/v1/integrations/all-posts/like/<int:pk>/',
+         posts_views.AllPostsViewSet.as_view({'post': 'add_like'})),
+    path('api/v1/integrations/all-posts/unlike/<int:pk>/',
+         posts_views.AllPostsViewSet.as_view({'post': 'add_unlike'})),
     # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),

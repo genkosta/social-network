@@ -12,7 +12,7 @@ from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import mixins
+from rest_framework.decorators import action
 from .serializers import PostSerializer
 
 # Models
@@ -46,16 +46,63 @@ class PostDetail(DetailView):
 # Start - Web API ----------------------------------------------------------------------------------
 class AllPostsViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    View all posts.
-    Просмотр всех постов.
+    View all posts - Viewing, like, unlike.
+    Просмотр всех постов - Просмотр, лайк, дизлайк.
     """
 
-    permission_classes = [permissions.AllowAny, TokenHasReadWriteScope]
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
 
     def list(self, request):
         default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
         PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
         queryset = Post.objects.filter(is_disable=False)
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = PostSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PostSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @staticmethod
+    def retrieve(request, pk=None):
+        queryset = get_object_or_404(Post, pk=pk)
+        serializer = PostSerializer(queryset)
+        return Response(serializer.data)
+
+    @staticmethod
+    @action(methods=['post'], detail=True)
+    def add_like(request, pk=None):
+        queryset = get_object_or_404(Post, pk=pk)
+        queryset.like += 1
+        queryset.save()
+        serializer = PostSerializer(queryset)
+        return Response(serializer.data)
+
+    @staticmethod
+    @action(methods=['post'], detail=True)
+    def add_unlike(request, pk=None):
+        queryset = get_object_or_404(Post, pk=pk)
+        queryset.unlike += 1
+        queryset.save()
+        serializer = PostSerializer(queryset)
+        return Response(serializer.data)
+
+
+class UserPostsViewSet(viewsets.ModelViewSet):
+    """
+    Posts of user - Viewing, creation, updating.
+    Сообщения пользователя - Просмотр, создание, обновление.
+    """
+
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+
+    def list(self, request):
+        user_pk = request.user.pk
+        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
+        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
+        queryset = Post.objects.filter(user__pk=user_pk, is_disable=False)
         page = self.paginate_queryset(queryset)
 
         if page is not None:
