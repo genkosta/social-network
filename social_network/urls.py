@@ -13,7 +13,7 @@ from rest_framework.authtoken import views as authtoken_views
 from posts import views as posts_views
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register(r'all-posts', posts_views.AllPostsViewSet, base_name='all-posts')
+router.register(r'posts', posts_views.PostsViewSet, base_name='post')
 
 
 urlpatterns = [
@@ -27,19 +27,20 @@ urlpatterns = [
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('api/v1/integrations/', include(router.urls)),
     # Web API - Posts - Like, Unlike
-    path('api/v1/integrations/all-posts/<int:pk>/like/',
-         posts_views.AllPostsViewSet.as_view({'post': 'add_like'})),
-    path('api/v1/integrations/all-posts/<int:pk>/unlike/',
-         posts_views.AllPostsViewSet.as_view({'post': 'add_unlike'})),
-    # Web API - Posts of user
+    path('api/v1/integrations/posts/<int:pk>/like/',
+         posts_views.PostsViewSet.as_view({'post': 'add_like'})),
+    path('api/v1/integrations/posts/<int:pk>/unlike/',
+         posts_views.PostsViewSet.as_view({'post': 'add_unlike'})),
+    # Web API - Viewing user posts
     path('api/v1/integrations/user-posts/',
-         posts_views.UserPostsViewSet.as_view({'get': 'list'})),
+         posts_views.PostsViewSet.as_view({'get': 'get_user_posts'})),
     path('api/v1/integrations/user-posts/<int:pk>/',
-         posts_views.UserPostsViewSet.as_view({'get': 'retrieve'})),
+         posts_views.PostsViewSet.as_view({'get': 'get_user_post'})),
+    # Web API - Create post, Update post
     path('api/v1/integrations/user-posts/create/',
-         posts_views.UserPostsViewSet.as_view({'post': 'create'})),
+         posts_views.PostsViewSet.as_view({'post': 'create'})),
     path('api/v1/integrations/user-posts/<int:pk>/update/',
-         posts_views.UserPostsViewSet.as_view({'post': 'update'})),
+         posts_views.PostsViewSet.as_view({'post': 'update'})),
     # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),

@@ -49,32 +49,77 @@ class PostDetail(DetailView):
 
 # Start - Web API ----------------------------------------------------------------------------------
 
-class AllPostsViewSet(viewsets.ReadOnlyModelViewSet):
+class PostsViewSet(viewsets.ModelViewSet):
     """
-    View all posts - Viewing, like, unlike.
-    Просмотр всех постов - Просмотр, лайк, дизлайк.
+    User posts - Viewing, creation, updating, like, unlike.
     """
 
-    queryset = Post.objects.filter(is_disable=False)
-    serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+
+    def list(self, request):
+        """ Viewing all posts """
+        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
+        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
+        queryset = Post.objects.filter(is_disable=False)
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = PostSerializer(page, context={'request': request}, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PostSerializer(queryset, context={'request': request}, many=True)
+        return Response(serializer.data)
+
+    @staticmethod
+    def retrieve(request, pk=None):
+        """ View post """
+        queryset = get_object_or_404(Post, pk=pk)
+        serializer = PostSerializer(queryset, context={'request': request})
+        return Response(serializer.data)
 
     @staticmethod
     @action(methods=['post'], detail=True)
     def add_like(request, pk=None):
+        """ Add like """
         queryset = get_object_or_404(Post, pk=pk)
         queryset.like += 1
         queryset.save()
-        serializer = PostSerializer(queryset)
+        serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
 
     @staticmethod
     @action(methods=['post'], detail=True)
     def add_unlike(request, pk=None):
+        """ Add unlike """
         queryset = get_object_or_404(Post, pk=pk)
         queryset.unlike += 1
         queryset.save()
-        serializer = PostSerializer(queryset)
+        serializer = PostSerializer(queryset, context={'request': request})
+        return Response(serializer.data)
+
+    @action(methods=['get'], detail=False)
+    def get_user_posts(self, request):
+        """ Viewing user posts """
+        user_pk = request.user.pk
+        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
+        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
+        queryset = Post.objects.filter(user__pk=user_pk, is_disable=False)
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = PostSerializer(page, context={'request': request}, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PostSerializer(queryset, context={'request': request}, many=True)
+        return Response(serializer.data)
+
+    @staticmethod
+    @action(methods=['get'], detail=True)
+    def get_user_post(request, pk=None):
+        """ View user post """
+        user_pk = request.user.pk
+        queryset = get_object_or_404(Post, pk=pk, user__pk=user_pk)
+        serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
 
 
@@ -85,24 +130,6 @@ class UserPostsViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
-
-    def list(self, request):
-        user_pk = request.user.pk
-        queryset = Post.objects.filter(user__pk=user_pk, is_disable=False)
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = PostSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = PostSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    @staticmethod
-    def retrieve(request, pk=None):
-        queryset = get_object_or_404(Post, pk=pk)
-        serializer = PostSerializer(queryset)
-        return Response(serializer.data)
 
     @staticmethod
     def create(request):
