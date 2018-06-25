@@ -11,6 +11,9 @@ from .core import views as core_views
 # Web API
 from rest_framework.authtoken import views as authtoken_views
 from posts import views as posts_views
+from rest_framework import routers
+router = routers.DefaultRouter()
+router.register(r'all-posts', posts_views.AllPostsViewSet, base_name='all-posts')
 
 
 urlpatterns = [
@@ -22,11 +25,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', authtoken_views.obtain_auth_token),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    # Web API - All posts
-    path('api/v1/integrations/all-posts/',
-         posts_views.AllPostsViewSet.as_view({'get': 'list'})),
-    path('api/v1/integrations/all-posts/<int:pk>/',
-         posts_views.AllPostsViewSet.as_view({'get': 'retrieve'})),
+    path('api/v1/integrations/', include(router.urls)),
+    # Web API - Posts - Like, Unlike
     path('api/v1/integrations/all-posts/<int:pk>/like/',
          posts_views.AllPostsViewSet.as_view({'post': 'add_like'})),
     path('api/v1/integrations/all-posts/<int:pk>/unlike/',

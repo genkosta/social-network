@@ -49,32 +49,15 @@ class PostDetail(DetailView):
 
 # Start - Web API ----------------------------------------------------------------------------------
 
-class AllPostsViewSet(viewsets.ModelViewSet):
+class AllPostsViewSet(viewsets.ReadOnlyModelViewSet):
     """
     View all posts - Viewing, like, unlike.
     Просмотр всех постов - Просмотр, лайк, дизлайк.
     """
 
+    queryset = Post.objects.filter(is_disable=False)
+    serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
-
-    def list(self, request):
-        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
-        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
-        queryset = Post.objects.filter(is_disable=False)
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = PostSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = PostSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    @staticmethod
-    def retrieve(request, pk=None):
-        queryset = get_object_or_404(Post, pk=pk)
-        serializer = PostSerializer(queryset)
-        return Response(serializer.data)
 
     @staticmethod
     @action(methods=['post'], detail=True)
@@ -105,8 +88,6 @@ class UserPostsViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         user_pk = request.user.pk
-        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
-        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
         queryset = Post.objects.filter(user__pk=user_pk, is_disable=False)
         page = self.paginate_queryset(queryset)
 
@@ -133,7 +114,7 @@ class UserPostsViewSet(viewsets.ModelViewSet):
             queryset.user = user
             queryset.save()
             serializer = PostSerializer(queryset)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             response = {}
             for field, errors in form.errors.items():
