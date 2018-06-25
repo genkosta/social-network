@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import ListView
 from django.views.generic import DetailView
+
+# Web API
+from rest_framework import viewsets, permissions
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
+
+# Models
 from .models import Post
 
 
