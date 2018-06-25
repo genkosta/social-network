@@ -18,6 +18,9 @@ from .serializers import PostSerializer
 # Models
 from .models import Post
 
+# Forms
+from .forms import CreatePostForm
+
 
 class PostList(ListView):
     """
@@ -44,7 +47,8 @@ class PostDetail(DetailView):
 
 
 # Start - Web API ----------------------------------------------------------------------------------
-class AllPostsViewSet(viewsets.ReadOnlyModelViewSet):
+
+class AllPostsViewSet(viewsets.ModelViewSet):
     """
     View all posts - Viewing, like, unlike.
     Просмотр всех постов - Просмотр, лайк, дизлайк.
@@ -117,4 +121,22 @@ class UserPostsViewSet(viewsets.ModelViewSet):
         queryset = get_object_or_404(Post, pk=pk)
         serializer = PostSerializer(queryset)
         return Response(serializer.data)
+
+    @staticmethod
+    def create(request):
+        form = CreatePostForm(request.POST)
+
+        if form.is_valid():
+            user = request.user
+            queryset = form.save(commit=False)
+            queryset.user = user
+            queryset.save()
+            serializer = PostSerializer(queryset)
+            return Response(serializer.data)
+        else:
+            response = {}
+            for field, errors in form.errors.items():
+                response[field] = '; '.join(errors)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
 # End - Web API ------------------------------------------------------------------------------------
