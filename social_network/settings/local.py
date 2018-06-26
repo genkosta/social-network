@@ -43,8 +43,8 @@ MIDDLEWARE += (
 
 QUERYCOUNT = {
     'THRESHOLDS': {
-        'MEDIUM': 15,
-        'HIGH': 25,
+        'MEDIUM': 20,
+        'HIGH': 50,
         'MIN_TIME_TO_LOG': 0,
         'MIN_QUERY_COUNT_TO_LOG': 0
     },

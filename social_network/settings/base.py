@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     # apps
     PROJECT_NAME,
+    'accounts',
     'posts',
 ]
 

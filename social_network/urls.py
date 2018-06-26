@@ -13,7 +13,7 @@ from rest_framework.authtoken import views as authtoken_views
 from posts import views as posts_views
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register(r'posts', posts_views.PostsViewSet, base_name='post')
+router.register(r'posts', posts_views.PostViewSet, base_name='post')
 
 
 urlpatterns = [
@@ -28,14 +28,9 @@ urlpatterns = [
     path('api/v1/integrations/', include(router.urls)),
     # Web API - Posts - Like, Unlike
     path('api/v1/integrations/posts/<int:pk>/like/',
-         posts_views.PostsViewSet.as_view({'post': 'add_like'})),
+         posts_views.PostViewSet.as_view({'post': 'add_like'})),
     path('api/v1/integrations/posts/<int:pk>/unlike/',
-         posts_views.PostsViewSet.as_view({'post': 'add_unlike'})),
-    # Web API - Viewing user posts
-    path('api/v1/integrations/user-posts/',
-         posts_views.PostsViewSet.as_view({'get': 'get_user_posts'})),
-    path('api/v1/integrations/user-posts/<int:pk>/',
-         posts_views.PostsViewSet.as_view({'get': 'get_user_post'})),
+         posts_views.PostViewSet.as_view({'post': 'add_unlike'})),
     # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),

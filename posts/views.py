@@ -49,9 +49,41 @@ class PostDetail(DetailView):
 
 # Start - Web API ----------------------------------------------------------------------------------
 
+class PostViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint: Users posts - Viewing, creation, updating, like, unlike.
+    """
+
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+
+    queryset = Post.objects.filter(is_disable=False).prefetch_related('user')
+    serializer_class = PostSerializer
+
+    @staticmethod
+    @action(methods=['post'], detail=True)
+    def add_like(request, pk=None):
+        """ Add like """
+        queryset = get_object_or_404(Post, pk=pk)
+        queryset.like += 1
+        queryset.save()
+        serializer = PostSerializer(queryset, context={'request': request})
+        return Response(serializer.data)
+
+    @staticmethod
+    @action(methods=['post'], detail=True)
+    def add_unlike(request, pk=None):
+        """ Add unlike """
+        queryset = get_object_or_404(Post, pk=pk)
+        queryset.unlike += 1
+        queryset.save()
+        serializer = PostSerializer(queryset, context={'request': request})
+        return Response(serializer.data)
+
+
+'''
 class PostsViewSet(viewsets.ModelViewSet):
     """
-    User posts - Viewing, creation, updating, like, unlike.
+    API endpoint: Users posts - Viewing, creation, updating, like, unlike.
     """
 
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
@@ -121,5 +153,5 @@ class PostsViewSet(viewsets.ModelViewSet):
         queryset = get_object_or_404(Post, pk=pk, user__pk=user_pk)
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
-
+'''
 # End - Web API ------------------------------------------------------------------------------------

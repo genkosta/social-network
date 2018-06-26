@@ -2,10 +2,11 @@
 
 from django.db import models
 from imagekit.models import ImageSpecField
-from pilkit.processors import ResizeToFit, ResizeToFill
+from pilkit.processors import ResizeToFit
 from django.utils.safestring import mark_safe
 
 from django.db.models.signals import post_save, pre_save, pre_delete
+
 from social_network.core.models import (cleaning_files_pre_save, cleaning_files_pre_delete,
                                         validate_image, make_upload_path)
 
@@ -54,6 +55,9 @@ class Post(models.Model):
     thumbnail = ImageSpecField([ResizeToFit(height=60, width=60, upscale=True)], source='image')
     middle = ImageSpecField([ResizeToFit(height=180, width=180, upscale=True)], source='image')
 
+    def __str__(self):
+        return self.title
+
     @property
     def upload_dir(self):
         return 'posts/images'
@@ -75,6 +79,28 @@ class Post(models.Model):
         return reverse('posts:view-post', kwargs={'slug': self.slug})
 
 
+class Comment(models.Model):
+    post = models.ForeignKey(Post,
+                             verbose_name='Post',
+                             related_name='comments',
+                             on_delete=models.CASCADE)
+
+    user = models.ForeignKey(User,
+                             verbose_name='User',
+                             related_name='+',
+                             null=True,
+                             on_delete=models.SET_NULL,
+                             db_index=False)
+
+    text = models.TextField(verbose_name='Message', max_length=150, default="")
+    is_disable = models.BooleanField('Is disable?', blank=True, default=False)
+
+    created_at = models.DateTimeField(verbose_name='Publication date', auto_now_add=True)
+
+    def __str__(self):
+        return self.text
+
+
 # Signals
 def post_add_slug(instance, **kwargs):
     new_slug = '{0}-{1}'.format(instance.pk, slugify(instance.title))
@@ -83,6 +109,8 @@ def post_add_slug(instance, **kwargs):
         instance.save()
 
 
+# Add slug
 post_save.connect(post_add_slug,  sender=Post)
+# Cleaning files
 pre_save.connect(cleaning_files_pre_save, sender=Post)
 pre_delete.connect(cleaning_files_pre_delete, sender=Post)
