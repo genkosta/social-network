@@ -1,14 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from .models import Post, Comment
-
-
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    """ Serializer - Comments """
-
-    class Meta:
-        model = Comment
-        fields = ('url', 'id', 'text', 'created_at')
+from .models import Post
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):

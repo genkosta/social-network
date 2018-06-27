@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
-from django.conf import settings
-from django.utils.translation import ugettext as _
 from django.db.models import Prefetch
 
 # Views Classes
@@ -12,7 +10,6 @@ from django.views.generic import DetailView
 from rest_framework import viewsets, permissions
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from .serializers import PostSerializer
