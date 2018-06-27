@@ -13,7 +13,7 @@ from rest_framework.authtoken import views as authtoken_views
 from posts import views as posts_views
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register(r'posts', posts_views.PostViewSet, base_name='post')
+router.register(r'posts', posts_views.PostViewSet)
 
 
 urlpatterns = [
