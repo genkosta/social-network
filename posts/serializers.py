@@ -13,6 +13,11 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         model = Post
         fields = ('url', 'id', 'user', 'image', 'title', 'message', 'like',
                   'unlike', 'created_at', 'comment_list')
+        read_only_fields = ('id', 'user', 'created_at')
+        extra_kwargs = {
+            'title': {'required': True},
+            'message': {'required': True}
+        }
 
     def get_user_data(self, obj):
         request = self.context['request']
@@ -49,3 +54,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
                 'created_date': comment.created_at
             })
         return result
+
+    def create(self, validated_data):
+        request = self.context['request']
+        validated_data['user'] = request.user
+        return Post.objects.create(**validated_data)
