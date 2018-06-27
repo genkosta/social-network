@@ -73,7 +73,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     def partial_update(self, instance, validated_data):
         request = self.context['request']
-        if instance.user.id == request.user.id:
+        if not instance.user.id == request.user.id:
             instance.title = validated_data.get('title', instance.title)
             instance.message = validated_data.get('message', instance.message)
             instance.save()

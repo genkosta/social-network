@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
+from django.http import Http404
+from django.utils.translation import ugettext as _
 
 # Views Classes
 from django.views.generic import ListView
 from django.views.generic import DetailView
 
 # Web API
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.decorators import action
 from .serializers import PostSerializer
 
@@ -99,6 +100,17 @@ class PostViewSet(viewsets.ModelViewSet):
         queryset.save()
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            if instance.user.id != request.user.id:
+                msg = {'error': _('Only the author can delete the post.')}
+                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 '''

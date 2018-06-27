@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-27 13:04+0000\n"
+"POT-Creation-Date: 2018-06-27 16:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,3 +23,7 @@ msgstr ""
 #: posts/serializers.py:72 posts/serializers.py:82
 msgid "Only the author can update the post."
 msgstr "Только автор может обновить пост."
+
+#: posts/views.py:108
+msgid "Only the author can delete the post."
+msgstr "Только автор может удалить пост."
