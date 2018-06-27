@@ -42,7 +42,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         request = self.context['request']
         scheme = request.scheme
         host = request.get_host()
-        comments = obj.comments.filter(is_disable=False).prefetch_related('user')
+        comments = obj.comments.all()
         result = []
         for comment in comments:
             user = comment.user

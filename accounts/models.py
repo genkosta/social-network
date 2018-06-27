@@ -13,7 +13,9 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User,
+                                related_name='profile',
+                                on_delete=models.CASCADE)
 
     image = models.ImageField(verbose_name='Image',
                               validators=[validate_image],

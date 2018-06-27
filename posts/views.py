@@ -2,6 +2,7 @@
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from django.db.models import Prefetch
 
 # Views Classes
 from django.views.generic import ListView
@@ -17,10 +18,9 @@ from rest_framework.decorators import action
 from .serializers import PostSerializer
 
 # Models
-from .models import Post
-
-# Forms
-from .forms import CreatePostForm
+from .models import Post, Comment
+from django.contrib.auth.models import User
+from accounts.models import Profile
 
 
 class PostList(ListView):
@@ -56,7 +56,21 @@ class PostViewSet(viewsets.ModelViewSet):
 
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
 
-    queryset = Post.objects.filter(is_disable=False).prefetch_related('user')
+    queryset = Post.objects.filter(is_disable=False)\
+        .prefetch_related(
+        Prefetch('user', queryset=User.objects.only('first_name', 'last_name')
+                 .prefetch_related(
+            Prefetch('profile', queryset=Profile.objects.only('image'))
+        )),
+        Prefetch('comments', queryset=Comment.objects.filter(is_disable=False)
+                 .prefetch_related(
+            Prefetch('user', queryset=User.objects.only('first_name', 'last_name')
+                     .prefetch_related(
+                Prefetch('profile', queryset=Profile.objects.only('image'))
+            ))
+        ))
+    )
+
     serializer_class = PostSerializer
 
     @staticmethod
