@@ -13,7 +13,7 @@ from rest_framework.authtoken import views as authtoken_views
 from posts import views as posts_views
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register(r'posts', posts_views.PostViewSet)
+router.register(r'v1/integrations/posts', posts_views.PostViewSet)
 
 
 urlpatterns = [
@@ -25,7 +25,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', authtoken_views.obtain_auth_token),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('api/v1/integrations/', include(router.urls)),
+    path('api/', include(router.urls)),
     # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),

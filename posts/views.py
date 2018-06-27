@@ -11,7 +11,6 @@ from rest_framework import viewsets, permissions
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from .serializers import PostSerializer
 

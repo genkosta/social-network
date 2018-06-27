@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-25 10:34+0000\n"
+"POT-Creation-Date: 2018-06-27 13:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,11 +32,11 @@ msgstr "Изображение не может быть 0 Мб"
 msgid "The image size exceeds the limit of 2 MB."
 msgstr "Размер изображения превышает лимит 2 Мб."
 
-#: social_network/settings/base.py:89
+#: social_network/settings/base.py:90
 msgid "English"
 msgstr "Английский"
 
-#: social_network/settings/base.py:90
+#: social_network/settings/base.py:91
 msgid "Russian"
 msgstr "Русский"
 

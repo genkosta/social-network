@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
+from django.utils.translation import ugettext_lazy as _
 from .models import Post
 
 
@@ -59,3 +60,23 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         request = self.context['request']
         validated_data['user'] = request.user
         return Post.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        request = self.context['request']
+        if instance.user.id == request.user.id:
+            instance.title = validated_data.get('title', instance.title)
+            instance.message = validated_data.get('message', instance.message)
+            instance.save()
+            return instance
+        else:
+            raise serializers.ValidationError(_('Only the author can update the post.'))
+
+    def partial_update(self, instance, validated_data):
+        request = self.context['request']
+        if instance.user.id == request.user.id:
+            instance.title = validated_data.get('title', instance.title)
+            instance.message = validated_data.get('message', instance.message)
+            instance.save()
+            return instance
+        else:
+            raise serializers.ValidationError(_('Only the author can update the post.'))
