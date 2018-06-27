@@ -26,11 +26,6 @@ urlpatterns = [
     path('api-token-auth/', authtoken_views.obtain_auth_token),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('api/v1/integrations/', include(router.urls)),
-    # Web API - Posts - Like, Unlike
-    path('api/v1/integrations/posts/<int:pk>/like/',
-         posts_views.PostViewSet.as_view({'post': 'add_like'})),
-    path('api/v1/integrations/posts/<int:pk>/unlike/',
-         posts_views.PostViewSet.as_view({'post': 'add_unlike'})),
     # Login, Sign up
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),

@@ -71,7 +71,12 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     @staticmethod
-    @action(methods=['post'], detail=True)
+    @action(
+        methods=['post'],
+        detail=True,
+        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
+        url_path='like'
+    )
     def add_like(request, pk=None):
         """ Add like """
         queryset = get_object_or_404(Post, pk=pk)
@@ -81,7 +86,12 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @staticmethod
-    @action(methods=['post'], detail=True)
+    @action(
+        methods=['post'],
+        detail=True,
+        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
+        url_path='unlike'
+    )
     def add_unlike(request, pk=None):
         """ Add unlike """
         queryset = get_object_or_404(Post, pk=pk)
