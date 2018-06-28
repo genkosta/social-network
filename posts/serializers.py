@@ -12,7 +12,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     comment_list = serializers.SerializerMethodField('get_comments')
 
     image = Base64ImageField(
-        max_length=None, use_url=True,
+        max_length=None, use_url=True, required=False
     )
 
     class Meta:
