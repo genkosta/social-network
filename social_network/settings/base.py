@@ -166,6 +166,5 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser'
     ),
-    'DEFAULT_PAGINATION_CLASS': 'social_network.core.pagination.StandardResultsSetPagination',
-    'DATETIME_FORMAT': 'iso-8601'
+    'DEFAULT_PAGINATION_CLASS': 'social_network.core.pagination.StandardResultsSetPagination'
 }
