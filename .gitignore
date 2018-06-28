@@ -18,6 +18,7 @@ db.sqlite3
 
 ### Pycharm ###
 .idea
+.editorconfig
 
 ### Django-sphinxql ###
 binlog.*

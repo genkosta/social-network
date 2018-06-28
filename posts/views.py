@@ -14,6 +14,7 @@ from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .serializers import PostSerializer
+from social_network.core.versioning import PostVersioning
 
 # Models
 from .models import Post, Comment
@@ -70,6 +71,7 @@ class PostViewSet(viewsets.ModelViewSet):
     )
 
     serializer_class = PostSerializer
+    versioning_class = PostVersioning
 
     @staticmethod
     @action(
