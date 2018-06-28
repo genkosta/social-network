@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
+from social_network.core.drf_fields import Base64ImageField
 from django.utils.translation import ugettext_lazy as _
 from .models import Post
 
@@ -9,6 +10,10 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     user = serializers.SerializerMethodField('get_user_data')
     comment_list = serializers.SerializerMethodField('get_comments')
+
+    image = Base64ImageField(
+        max_length=None, use_url=True,
+    )
 
     class Meta:
         model = Post
