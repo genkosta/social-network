@@ -9,17 +9,18 @@ from imagekit.models import ImageSpecField
 from django.utils.translation import ugettext_lazy as _
 
 
-def validate_image(image):
-    extension_list = ['jpg', 'jpeg', 'png', 'gif', 'JPG', 'JPEG', 'PNG', 'GIF']
-    size = int(image.size)
-    extension = image.name.split('.')[-1]
+def validate_image(instance):
+    if instance is not None:
+        extension_list = ['jpg', 'jpeg', 'png', 'gif', 'JPG', 'JPEG', 'PNG', 'GIF']
+        size = int(instance.size)
+        extension = instance.name.split('.')[-1]
 
-    if not [ext for ext in extension_list if extension == ext]:
-        raise ValidationError(_('Only JPG, PNG or GIF files.'))
-    elif not size:
-        raise ValidationError(_('Image can not be 0 MB.'))
-    elif not size or size > 2097152:
-        raise ValidationError(_('The image size exceeds the limit of 2 MB.'))
+        if not [ext for ext in extension_list if extension == ext]:
+            raise ValidationError(_('Only JPG, PNG or GIF files.'))
+        elif not size:
+            raise ValidationError(_('Image can not be 0 MB.'))
+        elif not size or size > 2097152:
+            raise ValidationError(_('The image size exceeds the limit of 2 MB.'))
 
 
 def make_upload_path(instance, filename):

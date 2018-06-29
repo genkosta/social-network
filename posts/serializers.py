@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from social_network.core.drf_fields import Base64ImageField
+from drf_extra_fields.fields import Base64ImageField
 from django.utils.translation import ugettext_lazy as _
+from social_network.core.models import validate_image
 from .models import Post
 
 
@@ -10,20 +11,15 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     user = serializers.SerializerMethodField('get_user_data')
     comment_list = serializers.SerializerMethodField('get_comments')
-
-    image = Base64ImageField(
-        max_length=None, use_url=True, required=False
-    )
+    image = Base64ImageField(required=False, allow_null=True, validators=[validate_image])
+    title = serializers.CharField(max_length=50, required=True)
+    message = serializers.CharField(max_length=1000, required=True)
 
     class Meta:
         model = Post
         fields = ('url', 'id', 'user', 'image', 'title', 'message', 'like',
                   'unlike', 'created_at', 'comment_list')
         read_only_fields = ('id', 'user', 'created_at')
-        extra_kwargs = {
-            'title': {'required': True},
-            'message': {'required': True}
-        }
 
     def get_user_data(self, obj):
         request = self.context['request']
@@ -57,18 +53,18 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
                 'avatar': image_url,
                 'author': user.get_full_name(),
                 'message': comment.text,
-                'created_date': comment.created_at
+                'created_at': comment.created_at
             })
         return result
 
     def create(self, validated_data):
         request = self.context['request']
-        validated_data['user'] = request.user
+        validated_data['user'] = request.user  # Add author
         return Post.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         request = self.context['request']
-        if instance.user.id == request.user.id:
+        if instance.user.id == request.user.id:  # Check copyright
             instance.title = validated_data.get('title', instance.title)
             instance.message = validated_data.get('message', instance.message)
             instance.save()
@@ -78,7 +74,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     def partial_update(self, instance, validated_data):
         request = self.context['request']
-        if not instance.user.id == request.user.id:
+        if not instance.user.id == request.user.id:  # Check copyright
             instance.title = validated_data.get('title', instance.title)
             instance.message = validated_data.get('message', instance.message)
             instance.save()

@@ -38,7 +38,7 @@ class Post(models.Model):
                              help_text='Title post.')
 
     message = models.TextField(verbose_name='Message',
-                               max_length=1500,
+                               max_length=1000,
                                default='',
                                help_text='Your new message.')
 

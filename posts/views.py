@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
-from django.http import Http404
 from django.utils.translation import ugettext as _
 
 # Views Classes
@@ -73,14 +72,13 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     versioning_class = PostVersioning
 
-    @staticmethod
     @action(
         methods=['post'],
         detail=True,
         permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
         url_path='like'
     )
-    def add_like(request, pk=None):
+    def add_like(self, request, pk=None, version=None):
         """ Add like """
         queryset = get_object_or_404(Post, pk=pk)
         queryset.like += 1
@@ -88,14 +86,13 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
 
-    @staticmethod
     @action(
         methods=['post'],
         detail=True,
         permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
         url_path='unlike'
     )
-    def add_unlike(request, pk=None):
+    def add_unlike(self, request, pk=None, version=None):
         """ Add unlike """
         queryset = get_object_or_404(Post, pk=pk)
         queryset.unlike += 1
@@ -104,72 +101,25 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            if instance.user.id != request.user.id:
-                msg = {'error': _('Only the author can delete the post.')}
-                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-            self.perform_destroy(instance)
-        except Http404:
-            pass
+        instance = self.get_object()
+        if instance.user.id != request.user.id:  # Check copyright
+            msg = {'error': _('Only the author can delete the post.')}
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+        self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def perform_destroy(self, instance):
+        instance.delete()
 
-'''
-class PostsViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint: Users posts - Viewing, creation, updating, like, unlike.
-    """
-
-    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
-
-    def list(self, request):
-        """ Viewing all posts """
-        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
-        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
-        queryset = Post.objects.filter(is_disable=False)
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = PostSerializer(page, context={'request': request}, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = PostSerializer(queryset, context={'request': request}, many=True)
-        return Response(serializer.data)
-
-    @staticmethod
-    def retrieve(request, pk=None):
-        """ View post """
-        queryset = get_object_or_404(Post, pk=pk)
-        serializer = PostSerializer(queryset, context={'request': request})
-        return Response(serializer.data)
-
-    @staticmethod
-    @action(methods=['post'], detail=True)
-    def add_like(request, pk=None):
-        """ Add like """
-        queryset = get_object_or_404(Post, pk=pk)
-        queryset.like += 1
-        queryset.save()
-        serializer = PostSerializer(queryset, context={'request': request})
-        return Response(serializer.data)
-
-    @staticmethod
-    @action(methods=['post'], detail=True)
-    def add_unlike(request, pk=None):
-        """ Add unlike """
-        queryset = get_object_or_404(Post, pk=pk)
-        queryset.unlike += 1
-        queryset.save()
-        serializer = PostSerializer(queryset, context={'request': request})
-        return Response(serializer.data)
-
-    @action(methods=['get'], detail=False)
-    def get_user_posts(self, request):
+    @action(
+        methods=['get'],
+        detail=False,
+        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
+        url_path='owner'
+    )
+    def get_user_posts(self, request, version=None):
         """ Viewing user posts """
         user_pk = request.user.pk
-        default_page_size = settings.REST_FRAMEWORK['PAGE_SIZE']
-        PageNumberPagination.page_size = request.GET.get('per_page', default_page_size)
         queryset = Post.objects.filter(user__pk=user_pk, is_disable=False)
         page = self.paginate_queryset(queryset)
 
@@ -180,13 +130,17 @@ class PostsViewSet(viewsets.ModelViewSet):
         serializer = PostSerializer(queryset, context={'request': request}, many=True)
         return Response(serializer.data)
 
-    @staticmethod
-    @action(methods=['get'], detail=True)
-    def get_user_post(request, pk=None):
+    @action(
+        methods=['get'],
+        detail=True,
+        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
+        url_path='owner'
+    )
+    def get_user_post(self, request, pk=None, version=None):
         """ View user post """
         user_pk = request.user.pk
         queryset = get_object_or_404(Post, pk=pk, user__pk=user_pk)
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
-'''
+
 # End - Web API ------------------------------------------------------------------------------------
