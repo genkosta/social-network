@@ -1,42 +1,19 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
-from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
 
 from django.utils.translation import ugettext_lazy as _
 from social_network.core.models import validate_image
 
-from django.contrib.auth.models import User
 from .models import Post
-from accounts.models import Profile
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = ('image',)
-
-
-class UserSerializer(serializers.ModelSerializer):
-
-    profile = ProfileSerializer(read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'profile')
-        read_only_fields = ('first_name', 'last_name')
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     """ Serializer - Users posts """
 
-    user = PresentablePrimaryKeyRelatedField(
-        queryset=User.objects,
-        presentation_serializer=UserSerializer
-    )
-
+    user = serializers.SerializerMethodField('get_user_data')
     comment_list = serializers.SerializerMethodField('get_comments')
+
     image = Base64ImageField(required=False, allow_null=True, validators=[validate_image])
     title = serializers.CharField(max_length=50, required=True)
     message = serializers.CharField(max_length=1000, required=True)
@@ -47,6 +24,22 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
                   'unlike', 'created_at', 'comment_list')
         read_only_fields = ('id', 'user', 'created_at')
 
+    def get_user_data(self, obj):
+        request = self.context['request']
+        scheme = request.scheme
+        host = request.get_host()
+        user = obj.user
+        try:
+            image_url = '{0}://{1}{2}'.format(scheme, host, user.profile.image.url)
+        except ValueError:
+            image_url = None
+
+        result = {
+            'avatar': image_url,
+            'author': user.get_full_name()
+        }
+        return result
+
     def get_comments(self, obj):
         request = self.context['request']
         scheme = request.scheme
@@ -56,7 +49,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         for comment in comments:
             user = comment.user
             try:
-                image_url = '{0}://{1}{2}'.format(scheme, host, user.profile.thumbnail.url)
+                image_url = '{0}://{1}{2}'.format(scheme, host, user.profile.image.url)
             except ValueError:
                 image_url = None
             result.append({

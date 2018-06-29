@@ -54,16 +54,16 @@ class PostViewSet(viewsets.ModelViewSet):
 
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
 
-    queryset = Post.objects.filter(is_disable=False)\
-        .prefetch_related(
-        Prefetch('comments', queryset=Comment.objects.filter(is_disable=False)
-                 .prefetch_related(
-            Prefetch('user', queryset=User.objects.only('first_name', 'last_name')
-                     .prefetch_related(
+    queryset = Post.objects.filter(is_disable=False).prefetch_related(
+        Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
+            Prefetch('profile', queryset=Profile.objects.only('image'))
+        )),
+        Prefetch('comments', queryset=Comment.objects.filter(is_disable=False).prefetch_related(
+            Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
                 Prefetch('profile', queryset=Profile.objects.only('image'))
             ))
         ))
-    )
+    )[:1000]
 
     serializer_class = PostSerializer
     versioning_class = PostVersioning
