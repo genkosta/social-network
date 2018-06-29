@@ -56,10 +56,6 @@ class PostViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.filter(is_disable=False)\
         .prefetch_related(
-        Prefetch('user', queryset=User.objects.only('first_name', 'last_name')
-                 .prefetch_related(
-            Prefetch('profile', queryset=Profile.objects.only('image'))
-        )),
         Prefetch('comments', queryset=Comment.objects.filter(is_disable=False)
                  .prefetch_related(
             Prefetch('user', queryset=User.objects.only('first_name', 'last_name')
