@@ -19,8 +19,8 @@ def validate_image(instance):
             raise ValidationError(_('Only JPG, PNG or GIF files.'))
         elif not size:
             raise ValidationError(_('Image can not be 0 MB.'))
-        elif not size or size > 2097152:
-            raise ValidationError(_('The image size exceeds the limit of 2 MB.'))
+        elif not size or size > 524288:
+            raise ValidationError(_('The image size exceeds the limit of 0.5 MB.'))
 
 
 def make_upload_path(instance, filename):
