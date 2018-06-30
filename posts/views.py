@@ -12,7 +12,7 @@ from rest_framework import viewsets, permissions, status
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .serializers import PostSerializer
+from .serializers import PostSerializer, CommentSerializer
 from social_network.core.drf_versioning import PostVersioning
 
 # Models
@@ -137,6 +137,21 @@ class PostViewSet(viewsets.ModelViewSet):
         user_pk = request.user.pk
         queryset = get_object_or_404(Post, pk=pk, user__pk=user_pk)
         serializer = PostSerializer(queryset, context={'request': request})
+        return Response(serializer.data)
+
+    @action(
+        methods=['post'],
+        detail=True,
+        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
+        url_path='comment'
+    )
+    def add_comment(self, request, pk=None, version=None):
+        """ Add unlike """
+        user = request.user
+        post = get_object_or_404(Post, pk=pk)
+        serializer = CommentSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user, post=post)
         return Response(serializer.data)
 
 # End - Web API ------------------------------------------------------------------------------------
