@@ -146,7 +146,7 @@ class PostViewSet(viewsets.ModelViewSet):
         url_path='comment'
     )
     def add_comment(self, request, pk=None, version=None):
-        """ Add unlike """
+        """ Add comment """
         user = request.user
         post = get_object_or_404(Post, pk=pk)
         serializer = CommentSerializer(data=request.data, context={'request': request})
