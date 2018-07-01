@@ -17,8 +17,9 @@ class CommentInline(admin.StackedInline):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'admin_thumbnail', 'like', 'unlike', 'created_at', 'updated_at')
-    readonly_fields = ('slug', 'like', 'unlike')
+    list_display = ('title', 'admin_thumbnail', 'like', 'unlike',
+                    'rating', 'created_at', 'updated_at')
+    readonly_fields = ('slug', 'like', 'unlike', 'rating')
     list_display_links = ('title', 'admin_thumbnail')
     raw_id_fields = ('user',)
     inlines = [CommentInline]

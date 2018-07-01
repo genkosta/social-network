@@ -54,16 +54,28 @@ class PostViewSet(viewsets.ModelViewSet):
 
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
 
-    queryset = Post.objects.filter(is_disable=False).prefetch_related(
-        Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
-            Prefetch('profile', queryset=Profile.objects.only('image'))
-        )),
-        Prefetch('comments', queryset=Comment.objects.filter(is_disable=False).prefetch_related(
+    def get_queryset(self):
+        rating = self.request.query_params.get('rating')
+        fields = ['-pk']
+
+        try:
+            if int(rating) == 1:
+                fields.insert(0, '-rating')
+        except TypeError:
+            pass
+
+        queryset = Post.objects.filter(is_disable=False).prefetch_related(
             Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
                 Prefetch('profile', queryset=Profile.objects.only('image'))
+            )),
+            Prefetch('comments', queryset=Comment.objects.filter(is_disable=False).prefetch_related(
+                Prefetch('user',
+                         queryset=User.objects.only('first_name', 'last_name').prefetch_related(
+                             Prefetch('profile', queryset=Profile.objects.only('image'))
+                         ))
             ))
-        ))
-    )
+        ).order_by(*fields)
+        return queryset
 
     serializer_class = PostSerializer
     versioning_class = PostVersioning

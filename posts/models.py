@@ -44,6 +44,7 @@ class Post(models.Model):
 
     like = models.PositiveIntegerField(verbose_name='Like', blank=True, default=0)
     unlike = models.PositiveIntegerField(verbose_name='Unlike', blank=True, default=0)
+    rating = models.IntegerField(verbose_name='Rating', blank=True, default=0)
 
     slug = models.SlugField(max_length=100, blank=True, null=True)
 
@@ -66,6 +67,12 @@ class Post(models.Model):
         ordering = ('-pk',)
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
+
+    def save(self, *args, **kwargs):
+        like = self.like
+        unlike = self.unlike
+        self.rating = like - unlike
+        super(Post, self).save(*args, **kwargs)
 
     def admin_thumbnail(self):
         if self.image:
