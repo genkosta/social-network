@@ -63,7 +63,7 @@ class PostViewSet(viewsets.ModelViewSet):
                 Prefetch('profile', queryset=Profile.objects.only('image'))
             ))
         ))
-    )[:1000]
+    )
 
     serializer_class = PostSerializer
     versioning_class = PostVersioning
