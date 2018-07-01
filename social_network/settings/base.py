@@ -150,6 +150,7 @@ OAUTH2_PROVIDER = {
         'write': 'Write scope'
     }
 }
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
