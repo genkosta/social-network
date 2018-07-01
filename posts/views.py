@@ -55,13 +55,12 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
 
     def get_queryset(self):
-        rating = self.request.query_params.get('rating')
+        rating = self.request.query_params.get('sort')
         fields = ['-pk']
 
-        try:
-            if int(rating) == 1:
-                fields.insert(0, '-rating')
-        except TypeError:
+        if rating == 'rating':
+            fields.insert(0, '-rating')
+        elif rating == 'last':  # unrequired
             pass
 
         queryset = Post.objects.filter(is_disable=False).prefetch_related(
