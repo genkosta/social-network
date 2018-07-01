@@ -98,7 +98,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance.user.id != request.user.id:  # Check copyright
+        if instance.user != request.user:  # Check copyright
             msg = {'error': _('Only the author can delete the post.')}
             return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         self.perform_destroy(instance)
@@ -115,8 +115,8 @@ class PostViewSet(viewsets.ModelViewSet):
     )
     def get_user_posts(self, request, version=None):
         """ Viewing user posts """
-        user_pk = request.user.pk
-        queryset = Post.objects.filter(user__pk=user_pk, is_disable=False)
+        user = request.user
+        queryset = Post.objects.filter(user=user, is_disable=False)
         page = self.paginate_queryset(queryset)
 
         if page is not None:

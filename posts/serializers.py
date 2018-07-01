@@ -67,7 +67,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         request = self.context['request']
-        if instance.user.id == request.user.id:  # Check copyright
+        if instance.user == request.user:  # Check copyright
             instance.title = validated_data.get('title', instance.title)
             instance.message = validated_data.get('message', instance.message)
             instance.save()
@@ -77,7 +77,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     def partial_update(self, instance, validated_data):
         request = self.context['request']
-        if not instance.user.id == request.user.id:  # Check copyright
+        if not instance.user == request.user:  # Check copyright
             instance.title = validated_data.get('title', instance.title)
             instance.message = validated_data.get('message', instance.message)
             instance.save()
