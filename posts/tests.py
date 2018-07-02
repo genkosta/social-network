@@ -83,3 +83,21 @@ class UpdatePostTest(APITestCase):
         }
         response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class DeletePostTest(APITestCase):
+
+    def setUp(self):
+        self.superuser = User.objects.create_superuser('admin', 'admin@site.net', '1234')
+        self.client.login(username='admin', password='1234')
+        data = {
+            'user': self.superuser,
+            'title': 'Test Post',
+            'message': 'Hello world!'
+        }
+        self.post = Post.objects.create(**data)
+
+    def test_can_delete_post(self):
+        url = f'/api/v1/integrations/posts/{self.post.id}/'
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
