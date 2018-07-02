@@ -22,7 +22,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         model = Post
         fields = ('url', 'id', 'user', 'image', 'title', 'message', 'like',
                   'unlike', 'created_at', 'comment_list')
-        read_only_fields = ('id', 'user', 'created_at')
+        read_only_fields = ('id', 'user', 'like', 'unlike', 'created_at')
 
     def get_user_data(self, obj):
         request = self.context['request']

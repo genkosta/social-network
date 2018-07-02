@@ -83,7 +83,7 @@ class Post(models.Model):
     admin_thumbnail.allow_tags = True
 
     def get_absolute_url(self):
-        return reverse('posts:view-post', kwargs={'slug': self.slug})
+        return reverse('web_posts:view_post', kwargs={'slug': self.slug})
 
 
 class Comment(models.Model):

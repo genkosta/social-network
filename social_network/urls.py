@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.contrib import admin
 from django.contrib.staticfiles.urls import static
 
@@ -30,7 +30,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', core_views.signup, name='signup'),
     # Posts
-    path('posts/', include('posts.urls', namespace='posts')),
+    path('posts/', include('posts.urls', namespace='web_posts')),
     # Home page
     path('', main_views.HomePageView.as_view(), name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
