@@ -153,18 +153,40 @@ class UserPostTest(APITestCase):
         }
         self.post = Post.objects.create(**data)
 
-    def test_can_read_post_list(self):
+    def test_can_read_user_post_list(self):
         """
         Ensure we can read user posts.
         """
-        url = '/api/v1/integrations/posts/'
+        url = '/api/v1/integrations/posts/owner/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_can_read_post_detail(self):
+    def test_can_read_user_post_detail(self):
         """
         Ensure we can read user post.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/'
+        url = f'/api/v1/integrations/posts/{self.post.id}/owner/'
         response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class AddCommentPostTest(APITestCase):
+
+    def setUp(self):
+        self.superuser = User.objects.create_superuser('admin', 'admin@site.net', '1234')
+        self.client.login(username='admin', password='1234')
+        data = {
+            'user': self.superuser,
+            'title': 'Test Post',
+            'message': 'Hello world!'
+        }
+        self.post = Post.objects.create(**data)
+
+    def test_can_add_comment(self):
+        """
+        Ensure we can add comment.
+        """
+        url = f'/api/v1/integrations/posts/{self.post.id}/comment/'
+        data = {'text': 'Cool post !!!'}
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
