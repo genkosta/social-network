@@ -4,8 +4,8 @@ from rest_framework import status
 
 from django.contrib.auth.models import User
 
-from .views import PostViewSet
 from .models import Post
+from .views import PostViewSet
 
 
 PostViewSet.permission_classes.pop()
@@ -60,4 +60,26 @@ class ReadPostTest(APITestCase):
     def test_can_read_post_detail(self):
         url = f'/api/v1/integrations/posts/{self.post.id}/'
         response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class UpdatePostTest(APITestCase):
+
+    def setUp(self):
+        self.superuser = User.objects.create_superuser('admin', 'admin@site.net', '1234')
+        self.client.login(username='admin', password='1234')
+        data = {
+            'user': self.superuser,
+            'title': 'Test Post',
+            'message': 'Hello world!'
+        }
+        self.post = Post.objects.create(**data)
+
+    def test_can_update_post(self):
+        url = f'/api/v1/integrations/posts/{self.post.id}/'
+        data = {
+            'title': 'Changed Post',
+            'message': 'Hello world!'
+        }
+        response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
