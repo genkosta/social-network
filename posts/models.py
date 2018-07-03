@@ -99,7 +99,7 @@ class Comment(models.Model):
                              on_delete=models.SET_NULL,
                              db_index=False)
 
-    text = models.TextField(verbose_name='Message', max_length=150, default="")
+    text = models.TextField(verbose_name='Message', max_length=200, default="")
     is_disable = models.BooleanField('Is disable?', blank=True, default=False)
 
     created_at = models.DateTimeField(verbose_name='Publication date', auto_now_add=True)
