@@ -36,7 +36,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
         result = {
             'avatar': image_url,
-            'author': user.get_full_name()
+            'first_name': user.first_name,
+            'last_name': user.last_name
         }
         return result
 
@@ -54,7 +55,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
                 image_url = None
             result.append({
                 'avatar': image_url,
-                'author': user.get_full_name(),
+                'first_name': user.first_name,
+                'last_name': user.last_name,
                 'message': comment.text,
                 'created_at': comment.created_at
             })
@@ -108,6 +110,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
         result = {
             'avatar': image_url,
-            'author': user.get_full_name()
+            'first_name': user.first_name,
+            'last_name': user.last_name
         }
         return result
