@@ -33,7 +33,8 @@ Solution of test task for StarNavi.
 
 
 # Console
-  * **sudo apt install httpie**
+**$ sudo apt install httpie**
+
   * **Get posts:** http GET 'http://localhost:8000/api/v1/integrations/posts/' 'Authorization:Bearer access_token'
   * **Get post:** http GET 'http://localhost:8000/api/v1/integrations/posts/{id}/' 'Authorization:Bearer access_token'
   * **Like:** http POST 'http://localhost:8000/api/v1/integrations/posts/{id}/like/' 'Authorization:Bearer access_token'
