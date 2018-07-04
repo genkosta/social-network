@@ -47,13 +47,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = '{}.urls'.format(PROJECT_NAME)
@@ -144,6 +144,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 4194304
 
 # Web API
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^(/api/.*|/o/.*)$'
 OAUTH2_PROVIDER = {
     'SCOPES': {
         'read': 'Read scope',
