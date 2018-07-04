@@ -32,7 +32,7 @@ Solution of test task for StarNavi.
   * [posts/tests.py](https://github.com/genkosta/social-network/blob/master/posts/tests.py)
 
 
-# Tests in console
+# Console
   * **sudo apt install httpie**
   * **Get posts:** http GET 'http://localhost:8000/api/v1/integrations/posts/' 'Authorization:Bearer access_token'
   * **Get post:** http GET 'http://localhost:8000/api/v1/integrations/posts/{id}/' 'Authorization:Bearer access_token'
