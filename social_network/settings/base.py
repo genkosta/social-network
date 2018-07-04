@@ -145,6 +145,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 4194304
 # Web API
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^(/api/.*|/o/.*)$'
+
 OAUTH2_PROVIDER = {
     'SCOPES': {
         'read': 'Read scope',
@@ -159,15 +160,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    ),
     'DEFAULT_PAGINATION_CLASS': 'social_network.core.drf_pagination.StandardResultsSetPagination',
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-    'TEST_REQUEST_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
 }
