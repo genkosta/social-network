@@ -15,4 +15,4 @@ Solution of test task for StarNavi.
 
 
 # MIT License
-
+[MIT License](https://github.com/genkosta/social-network/blob/master/LICENSE)
