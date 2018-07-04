@@ -12,3 +12,7 @@ Solution of test task for StarNavi.
 # Used documentation
   * [Django REST framework (Home)](http://www.django-rest-framework.org/)
   * [django-rest-framework-russian-documentation (Russian)](https://legacy.gitbook.com/book/ilyachch/django-rest-framework-russian-documentation/)
+
+
+# MIT License
+
