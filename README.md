@@ -57,7 +57,7 @@ Solution of test task for StarNavi.
 **Пример результата запроса:**
 
 http GET 'http://localhost:8000/api/v1/integrations/posts/?page=2&page_size=1' 'Authorization:Bearer bLiJubQvXGhEH7efgCZVWQguoru82Q'
-![Пример результата запроса](URL)
+![Пример результата запроса](https://github.com/genkosta/social-network/blob/master/screenshots/example_post_list.png?raw=true)
 
 
 # MIT License
