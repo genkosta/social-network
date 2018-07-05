@@ -19,7 +19,7 @@ Solution of test task for StarNavi.
   * **Edit applications:** http://localhost:8000/o/applications/
 
 **В целях безопасности, добавлены следующие ограничения:**
-    
+
   * **Client type:** Only - "confidential"
   * **Authorization Grant Type:** Only - "authorization-code"
 
@@ -48,6 +48,16 @@ Solution of test task for StarNavi.
   * **Add comment:** http -f POST 'http://localhost:8000/api/v1/integrations/posts/{id}/comment/' 'Authorization:Bearer access_token' text='Cool post!!!'
   * **Sort by latest (default):** http GET 'http://localhost:8000/api/v1/integrations/posts/?sort=latest' 'Authorization:Bearer access_token'
   * **Sort by rating:** http GET 'http://localhost:8000/api/v1/integrations/posts/?sort=rating' 'Authorization:Bearer access_token'
+
+**Опциональные параметры:**
+
+  * page - номер страницы
+  * page_size - количество записей на страницу
+
+**Пример результата запроса:**
+
+http GET 'http://localhost:8000/api/v1/integrations/posts/?page=2&page_size=1' 'Authorization:Bearer bLiJubQvXGhEH7efgCZVWQguoru82Q'
+![Пример результата запроса](URL)
 
 
 # MIT License

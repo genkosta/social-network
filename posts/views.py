@@ -82,7 +82,6 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(
         methods=['post'],
         detail=True,
-        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
         url_path='like'
     )
     def add_like(self, request, pk=None, version=None):
@@ -96,7 +95,6 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(
         methods=['post'],
         detail=True,
-        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
         url_path='unlike'
     )
     def add_unlike(self, request, pk=None, version=None):
@@ -121,7 +119,6 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(
         methods=['get'],
         detail=False,
-        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
         url_path='owner'
     )
     def get_user_posts(self, request, version=None):
@@ -140,7 +137,6 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(
         methods=['get'],
         detail=True,
-        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
         url_path='owner'
     )
     def get_user_post(self, request, pk=None, version=None):
@@ -153,7 +149,6 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(
         methods=['post'],
         detail=True,
-        permission_classes=[permissions.IsAuthenticated, TokenHasReadWriteScope],
         url_path='comment'
     )
     def add_comment(self, request, pk=None, version=None):
