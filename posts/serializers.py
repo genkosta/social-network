@@ -92,7 +92,7 @@ class CommentSerializer(serializers.ModelSerializer):
     """ Serializer - Publish comments for posts """
 
     user = serializers.SerializerMethodField('get_user_data')
-    text = serializers.CharField(max_length=150, required=True)
+    text = serializers.CharField(max_length=200, required=True)
 
     class Meta:
         model = Comment
