@@ -2,6 +2,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 from .models import Post
@@ -25,7 +26,7 @@ class CreatePostTest(APITestCase):
         """
         Ensure we can create a new post object.
         """
-        url = '/api/v1/integrations/posts/'
+        url = reverse('post-list', kwargs={'version': 'v1'})
         data = {
             'user': self.superuser.id,
             'title': 'Test Post',
@@ -53,7 +54,7 @@ class ReadPostTest(APITestCase):
         """
         Ensure we can read posts.
         """
-        url = '/api/v1/integrations/posts/'
+        url = reverse('post-list', kwargs={'version': 'v1'})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -61,7 +62,7 @@ class ReadPostTest(APITestCase):
         """
         Ensure we can read post.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/'
+        url = reverse('post-detail', args=('v1', self.post.id))
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -82,7 +83,7 @@ class UpdatePostTest(APITestCase):
         """
         Ensure we can update post.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/'
+        url = reverse('post-detail', args=('v1', self.post.id))
         data = {
             'title': 'Changed Post',
             'message': 'Hello world!'
@@ -107,7 +108,7 @@ class DeletePostTest(APITestCase):
         """
         Ensure we can delete post.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/'
+        url = reverse('post-detail', args=('v1', self.post.id))
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -128,7 +129,7 @@ class LikePostTest(APITestCase):
         """
         Ensure we can add like.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/like/'
+        url = reverse('post-add_like', args=('v1', self.post.id))
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -136,7 +137,7 @@ class LikePostTest(APITestCase):
         """
         Ensure we can add unlike.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/unlike/'
+        url = reverse('post-add_unlike', args=('v1', self.post.id))
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
