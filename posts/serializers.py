@@ -2,7 +2,6 @@
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 
-from django.utils.translation import ugettext_lazy as _
 from social_network.core.models import validate_image
 
 from .models import Post, Comment
@@ -66,16 +65,6 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         request = self.context['request']
         validated_data['user'] = request.user  # Add author
         return Post.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        request = self.context['request']
-        if instance.user == request.user:  # Check copyright
-            instance.title = validated_data.get('title', instance.title)
-            instance.message = validated_data.get('message', instance.message)
-            instance.save()
-            return instance
-        else:
-            raise serializers.ValidationError(_('Only the author can update the post.'))
 
 
 class CommentSerializer(serializers.ModelSerializer):

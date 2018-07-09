@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
-from django.utils.translation import ugettext as _
+from django.http import Http404
 
 # Views Classes
 from django.views.generic import ListView
@@ -56,13 +56,16 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     versioning_class = PostVersioning
 
-    def get_custom_queryset(self, pk=None):
+    def get_custom_queryset(self, pk=None, user=None):
         rating = self.request.query_params.get('sort')
         fields = ['-pk']
         kwargs = {'is_disable': False}
 
         if pk is not None:
             kwargs['pk'] = pk
+
+        if user is not None:
+            kwargs['user'] = user
 
         if rating == 'rating':
             fields.insert(0, '-rating')
@@ -80,9 +83,16 @@ class PostViewSet(viewsets.ModelViewSet):
                          ))
             ))
         ).order_by(*fields)
-        return queryset if pk is None else queryset.first()
 
-    def list(self, request):
+        if pk is not None:
+            queryset = queryset.first()
+
+        if queryset is not None:
+            return queryset
+        else:
+            raise Http404
+
+    def list(self, request, version=None):
         queryset = self.get_custom_queryset()
         page = self.paginate_queryset(queryset)
 
@@ -93,7 +103,7 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = PostSerializer(queryset, context={'request': request}, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None, version=None):
         queryset = self.get_custom_queryset(pk=pk)
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
@@ -124,11 +134,9 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.user != request.user:  # Check copyright
-            msg = {'error': _('Only the author can delete the post.')}
-            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+    def destroy(self, request, pk=None, version=None):
+        user = request.user
+        instance = self.get_custom_queryset(pk=pk, user=user)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -143,7 +151,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_user_posts(self, request, version=None):
         """ Viewing user posts """
         user = request.user
-        queryset = Post.objects.filter(user=user, is_disable=False)
+        queryset = self.get_custom_queryset(user=user)
         page = self.paginate_queryset(queryset)
 
         if page is not None:
@@ -160,8 +168,8 @@ class PostViewSet(viewsets.ModelViewSet):
     )
     def get_user_post(self, request, pk=None, version=None):
         """ View user post """
-        user_pk = request.user.pk
-        queryset = get_object_or_404(Post, pk=pk, user__pk=user_pk)
+        user = request.user
+        queryset = self.get_custom_queryset(pk=pk, user=user)
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
 
@@ -177,6 +185,22 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = CommentSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user, post=post)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None, version=None):
+        user = request.user
+        queryset = self.get_custom_queryset(pk=pk, user=user)
+        serializer = PostSerializer(queryset, data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def partial_update(self, request, pk=None, version=None):
+        user = request.user
+        queryset = self.get_custom_queryset(pk=pk, user=user)
+        serializer = PostSerializer(queryset, data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
 
 # End - Web API ------------------------------------------------------------------------------------
