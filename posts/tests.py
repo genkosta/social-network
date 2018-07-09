@@ -129,7 +129,7 @@ class LikePostTest(APITestCase):
         """
         Ensure we can add like.
         """
-        url = reverse('post-add_like', args=('v1', self.post.id))
+        url = reverse('post-add-like', args=('v1', self.post.id))
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -137,7 +137,7 @@ class LikePostTest(APITestCase):
         """
         Ensure we can add unlike.
         """
-        url = reverse('post-add_unlike', args=('v1', self.post.id))
+        url = reverse('post-add-unlike', args=('v1', self.post.id))
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
