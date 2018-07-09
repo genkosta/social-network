@@ -187,7 +187,7 @@ class AddCommentPostTest(APITestCase):
         """
         Ensure we can add comment.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/comment/'
+        url = reverse('post-add-comment', args=('v1', self.post.id))
         data = {'text': 'Cool post !!!'}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
