@@ -158,7 +158,7 @@ class UserPostTest(APITestCase):
         """
         Ensure we can read user posts.
         """
-        url = '/api/v1/integrations/posts/owner/'
+        url = reverse('post-get-user-posts', args=('v1',))
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -166,7 +166,7 @@ class UserPostTest(APITestCase):
         """
         Ensure we can read user post.
         """
-        url = f'/api/v1/integrations/posts/{self.post.id}/owner/'
+        url = reverse('post-get-user-post', args=('v1', self.post.id))
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
