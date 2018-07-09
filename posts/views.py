@@ -53,17 +53,23 @@ class PostViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+    serializer_class = PostSerializer
+    versioning_class = PostVersioning
 
-    def get_queryset(self):
+    def get_custom_queryset(self, pk=None):
         rating = self.request.query_params.get('sort')
         fields = ['-pk']
+        kwargs = {'is_disable': False}
+
+        if pk is not None:
+            kwargs['pk'] = pk
 
         if rating == 'rating':
             fields.insert(0, '-rating')
         elif rating == 'last':  # unrequired
             pass
 
-        queryset = Post.objects.filter(is_disable=False).prefetch_related(
+        queryset = Post.objects.filter(**kwargs).prefetch_related(
             Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
                 Prefetch('profile', queryset=Profile.objects.only('image'))
             )),
@@ -74,10 +80,23 @@ class PostViewSet(viewsets.ModelViewSet):
                          ))
             ))
         ).order_by(*fields)
-        return queryset
+        return queryset if pk is None else queryset.first()
 
-    serializer_class = PostSerializer
-    versioning_class = PostVersioning
+    def list(self, request):
+        queryset = self.get_custom_queryset()
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = PostSerializer(page, context={'request': request}, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PostSerializer(queryset, context={'request': request}, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = self.get_custom_queryset(pk=pk)
+        serializer = PostSerializer(queryset, context={'request': request})
+        return Response(serializer.data)
 
     @action(
         methods=['post'],
