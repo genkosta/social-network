@@ -77,16 +77,6 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         else:
             raise serializers.ValidationError(_('Only the author can update the post.'))
 
-    def partial_update(self, instance, validated_data):
-        request = self.context['request']
-        if not instance.user == request.user:  # Check copyright
-            instance.title = validated_data.get('title', instance.title)
-            instance.message = validated_data.get('message', instance.message)
-            instance.save()
-            return instance
-        else:
-            raise serializers.ValidationError(_('Only the author can update the post.'))
-
 
 class CommentSerializer(serializers.ModelSerializer):
     """ Serializer - Publish comments for posts """
