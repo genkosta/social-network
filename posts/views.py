@@ -56,21 +56,14 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     versioning_class = PostVersioning
 
-    def get_custom_queryset(self, pk=None, user=None):
-        rating = self.request.query_params.get('sort')
-        order_by_fields = ['-pk']
-        filter_fields = {'is_disable': False}
-
-        if pk is not None:
-            filter_fields['pk'] = pk
+    def get_queryset_retrieve(self, pk=None, user=None):
+        filter_fields = {
+            'is_disable': False,
+            'pk': pk
+        }
 
         if user is not None:
             filter_fields['user'] = user
-
-        if rating == 'rating':
-            order_by_fields.insert(0, '-rating')
-        elif rating == 'last':  # unrequired
-            pass
 
         queryset = Post.objects.filter(**filter_fields).prefetch_related(
             Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
@@ -82,18 +75,43 @@ class PostViewSet(viewsets.ModelViewSet):
                              Prefetch('profile', queryset=Profile.objects.only('image'))
                          ))
             ))
-        ).order_by(*order_by_fields)[:1000]
+        ).first()
+
+        if queryset is None:
+            raise Http404
+
+        return queryset
+
+    def get_queryset_list(self, user=None):
+        rating = self.request.query_params.get('sort')
+        order_by_fields = ['-pk']
+        filter_fields = {'is_disable': False}
+
+        if user is not None:
+            filter_fields['user'] = user
+
+        if rating == 'rating':
+            order_by_fields.insert(0, '-rating')
+
+        queryset = Post.objects.filter(**filter_fields).prefetch_related(
+            Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
+                Prefetch('profile', queryset=Profile.objects.only('image'))
+            )),
+            Prefetch('comments', queryset=Comment.objects.filter(is_disable=False).prefetch_related(
+                Prefetch('user',
+                         queryset=User.objects.only('first_name', 'last_name').prefetch_related(
+                             Prefetch('profile', queryset=Profile.objects.only('image'))
+                         ))
+            ))
+        ).order_by(*order_by_fields)
 
         if queryset.count() == 0:
             raise Http404
 
-        if pk is not None:
-            queryset = queryset.first()
-
         return queryset
 
     def list(self, request, version=None):
-        queryset = self.get_custom_queryset()
+        queryset = self.get_queryset_list()
         page = self.paginate_queryset(queryset)
 
         if page is not None:
@@ -104,7 +122,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None, version=None):
-        queryset = self.get_custom_queryset(pk=pk)
+        queryset = self.get_queryset_retrieve(pk=pk)
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
 
@@ -115,7 +133,7 @@ class PostViewSet(viewsets.ModelViewSet):
     )
     def add_like(self, request, pk=None, version=None):
         """ Add like """
-        queryset = get_object_or_404(Post, pk=pk)
+        queryset = self.get_queryset_retrieve(pk=pk)
         queryset.like += 1
         queryset.save()
         serializer = PostSerializer(queryset, context={'request': request})
@@ -128,7 +146,7 @@ class PostViewSet(viewsets.ModelViewSet):
     )
     def add_unlike(self, request, pk=None, version=None):
         """ Add unlike """
-        queryset = get_object_or_404(Post, pk=pk)
+        queryset = self.get_queryset_retrieve(pk=pk)
         queryset.unlike += 1
         queryset.save()
         serializer = PostSerializer(queryset, context={'request': request})
@@ -136,7 +154,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None, version=None):
         user = request.user
-        instance = self.get_custom_queryset(pk=pk, user=user)
+        instance = self.get_queryset_retrieve(pk=pk, user=user)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -151,7 +169,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_user_posts(self, request, version=None):
         """ Viewing user posts """
         user = request.user
-        queryset = self.get_custom_queryset(user=user)
+        queryset = self.get_queryset_list(user=user)
         page = self.paginate_queryset(queryset)
 
         if page is not None:
@@ -169,7 +187,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_user_post(self, request, pk=None, version=None):
         """ View user post """
         user = request.user
-        queryset = self.get_custom_queryset(pk=pk, user=user)
+        queryset = self.get_queryset_retrieve(pk=pk, user=user)
         serializer = PostSerializer(queryset, context={'request': request})
         return Response(serializer.data)
 
@@ -189,7 +207,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk=None, version=None):
         user = request.user
-        queryset = self.get_custom_queryset(pk=pk, user=user)
+        queryset = self.get_queryset_retrieve(pk=pk, user=user)
         serializer = PostSerializer(queryset, data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -197,7 +215,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, pk=None, version=None):
         user = request.user
-        queryset = self.get_custom_queryset(pk=pk, user=user)
+        queryset = self.get_queryset_retrieve(pk=pk, user=user)
         serializer = PostSerializer(queryset, data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
