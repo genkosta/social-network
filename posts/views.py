@@ -82,7 +82,7 @@ class PostViewSet(viewsets.ModelViewSet):
                              Prefetch('profile', queryset=Profile.objects.only('image'))
                          ))
             ))
-        ).order_by(*order_by_fields)
+        ).order_by(*order_by_fields)[:1000]
 
         if queryset.count() == 0:
             raise Http404
