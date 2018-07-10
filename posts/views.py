@@ -58,21 +58,21 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def get_custom_queryset(self, pk=None, user=None):
         rating = self.request.query_params.get('sort')
-        fields = ['-pk']
-        kwargs = {'is_disable': False}
+        order_by_fields = ['-pk']
+        filter_fields = {'is_disable': False}
 
         if pk is not None:
-            kwargs['pk'] = pk
+            filter_fields['pk'] = pk
 
         if user is not None:
-            kwargs['user'] = user
+            filter_fields['user'] = user
 
         if rating == 'rating':
-            fields.insert(0, '-rating')
+            order_by_fields.insert(0, '-rating')
         elif rating == 'last':  # unrequired
             pass
 
-        queryset = Post.objects.filter(**kwargs).prefetch_related(
+        queryset = Post.objects.filter(**filter_fields).prefetch_related(
             Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
                 Prefetch('profile', queryset=Profile.objects.only('image'))
             )),
@@ -82,15 +82,15 @@ class PostViewSet(viewsets.ModelViewSet):
                              Prefetch('profile', queryset=Profile.objects.only('image'))
                          ))
             ))
-        ).order_by(*fields)
+        ).order_by(*order_by_fields)
+
+        if queryset.count() == 0:
+            raise Http404
 
         if pk is not None:
             queryset = queryset.first()
 
-        if queryset is not None:
-            return queryset
-        else:
-            raise Http404
+        return queryset
 
     def list(self, request, version=None):
         queryset = self.get_custom_queryset()
