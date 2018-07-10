@@ -98,7 +98,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
         queryset_ids = self.paginate_queryset(queryset_ids)
 
-        if queryset_ids is None:
+        if len(queryset_ids) == 0:
             raise Http404
 
         filter_fields['pk__in'] = queryset_ids
