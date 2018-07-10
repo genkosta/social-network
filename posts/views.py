@@ -95,13 +95,8 @@ class PostViewSet(viewsets.ModelViewSet):
     def list(self, request, version=None):
         queryset = self.get_custom_queryset()
         page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = PostSerializer(page, context={'request': request}, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = PostSerializer(queryset, context={'request': request}, many=True)
-        return Response(serializer.data)
+        serializer = PostSerializer(page, context={'request': request}, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, pk=None, version=None):
         queryset = self.get_custom_queryset(pk=pk)
@@ -153,13 +148,8 @@ class PostViewSet(viewsets.ModelViewSet):
         user = request.user
         queryset = self.get_custom_queryset(user=user)
         page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = PostSerializer(page, context={'request': request}, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = PostSerializer(queryset, context={'request': request}, many=True)
-        return Response(serializer.data)
+        serializer = PostSerializer(page, context={'request': request}, many=True)
+        return self.get_paginated_response(serializer.data)
 
     @action(
         methods=['get'],
