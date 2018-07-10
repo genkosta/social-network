@@ -82,8 +82,9 @@ class PostViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    def get_queryset_list(self, request, user=None):
-        rating = self.request.query_params.get('sort')
+    def get_queryset_list(self, user=None):
+        request = self.request
+        rating = request.query_params.get('sort')
         order_by_fields = ['-pk']
         filter_fields = {'is_disable': False}
 
@@ -93,7 +94,15 @@ class PostViewSet(viewsets.ModelViewSet):
         if rating == 'rating':
             order_by_fields.insert(0, '-rating')
 
-        queryset = Post.objects.filter(**filter_fields).prefetch_related(
+        queryset_ids = Post.objects.filter(**filter_fields).values_list('pk', flat=True)
+
+        queryset_ids = self.paginate_queryset(queryset_ids)
+
+        if queryset_ids is None:
+            raise Http404
+
+        filter_fields['pk__in'] = queryset_ids
+        page = Post.objects.filter(**filter_fields).prefetch_related(
             Prefetch('user', queryset=User.objects.only('first_name', 'last_name').prefetch_related(
                 Prefetch('profile', queryset=Profile.objects.only('image'))
             )),
@@ -104,21 +113,11 @@ class PostViewSet(viewsets.ModelViewSet):
                          ))
             ))
         ).order_by(*order_by_fields)
-
-        if queryset.count() == 0:
-            raise Http404
-
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = PostSerializer(page, context={'request': request}, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = PostSerializer(queryset, context={'request': request}, many=True)
-        return Response(serializer.data)
+        serializer = PostSerializer(page, context={'request': request}, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def list(self, request, version=None):
-        return self.get_queryset_list(request)
+        return self.get_queryset_list()
 
     def retrieve(self, request, pk=None, version=None):
         queryset = self.get_queryset_retrieve(pk=pk)
@@ -168,7 +167,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_user_posts(self, request, version=None):
         """ Viewing user posts """
         user = request.user
-        return self.get_queryset_list(request, user=user)
+        return self.get_queryset_list(user=user)
 
     @action(
         methods=['get'],
