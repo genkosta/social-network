@@ -82,7 +82,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    def get_queryset_list(self, user=None):
+    def get_queryset_list(self, request, user=None):
         rating = self.request.query_params.get('sort')
         order_by_fields = ['-pk']
         filter_fields = {'is_disable': False}
@@ -108,10 +108,6 @@ class PostViewSet(viewsets.ModelViewSet):
         if queryset.count() == 0:
             raise Http404
 
-        return queryset
-
-    def list(self, request, version=None):
-        queryset = self.get_queryset_list()
         page = self.paginate_queryset(queryset)
 
         if page is not None:
@@ -120,6 +116,9 @@ class PostViewSet(viewsets.ModelViewSet):
 
         serializer = PostSerializer(queryset, context={'request': request}, many=True)
         return Response(serializer.data)
+
+    def list(self, request, version=None):
+        return self.get_queryset_list(request)
 
     def retrieve(self, request, pk=None, version=None):
         queryset = self.get_queryset_retrieve(pk=pk)
@@ -169,15 +168,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_user_posts(self, request, version=None):
         """ Viewing user posts """
         user = request.user
-        queryset = self.get_queryset_list(user=user)
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = PostSerializer(page, context={'request': request}, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = PostSerializer(queryset, context={'request': request}, many=True)
-        return Response(serializer.data)
+        return self.get_queryset_list(request, user=user)
 
     @action(
         methods=['get'],
