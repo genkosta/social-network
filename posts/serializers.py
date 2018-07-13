@@ -2,6 +2,8 @@
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 
+from django.utils import formats
+
 from social_network.core.models import validate_image
 
 from .models import Post, Comment
@@ -12,6 +14,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     user = serializers.SerializerMethodField('get_user_data')
     comment_list = serializers.SerializerMethodField('get_comments')
+    created_at = serializers.SerializerMethodField('get_date_created')
 
     image = Base64ImageField(required=False, allow_null=True, validators=[validate_image])
     title = serializers.CharField(max_length=50, required=True)
@@ -40,6 +43,9 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         }
         return result
 
+    def get_date_created(self, obj):
+        return formats.date_format(obj.created_at, 'DATETIME_FORMAT')
+
     def get_comments(self, obj):
         request = self.context['request']
         scheme = request.scheme
@@ -57,7 +63,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'message': comment.text,
-                'created_at': comment.created_at
+                'created_at': formats.date_format(comment.created_at, 'DATETIME_FORMAT')
             })
         return result
 
