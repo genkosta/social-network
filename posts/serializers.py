@@ -78,6 +78,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     user = serializers.SerializerMethodField('get_user_data')
     text = serializers.CharField(max_length=200, required=True)
+    created_at = serializers.SerializerMethodField('get_date_created')
 
     class Meta:
         model = Comment
@@ -99,3 +100,6 @@ class CommentSerializer(serializers.ModelSerializer):
             'last_name': user.last_name
         }
         return result
+
+    def get_date_created(self, obj):
+        return formats.date_format(obj.created_at, 'DATETIME_FORMAT')
