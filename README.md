@@ -56,7 +56,7 @@ Solution of test task for StarNavi.
 
 **Пример результата запроса:**
 
-http GET 'http://localhost:8000/api/v1/integrations/posts/?page=2&page_size=1' 'Authorization:Bearer bLiJubQvXGhEH7efgCZVWQguoru82Q'
+http GET 'http://localhost:8000/api/v1/integrations/posts/10280/' 'Authorization:Bearer UfPvyV7WC6mIcf1W4LVqlBmUsXvwow'
 ![Пример результата запроса](https://github.com/genkosta/social-network/blob/master/screenshots/example_post_list.png?raw=true)
 
 
