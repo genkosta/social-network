@@ -38,11 +38,11 @@ class Command(BaseCommand):
             last_name = 'Поттер{}'.format(count_user)
             email = 'user{}@site.net'.format(count_user)
 
-            user = User.objects.create(username=username,
-                                       first_name=first_name,
-                                       last_name=last_name,
-                                       email=email,
-                                       password=password)
+            user = User.objects.create_user(username=username,
+                                            first_name=first_name,
+                                            last_name=last_name,
+                                            email=email,
+                                            password=password)
 
             user_id_list = User.objects.values_list('id', flat=True)
 
