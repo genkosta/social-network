@@ -1,5 +1,5 @@
 # social-network
-Solution of test task for StarNavi.
+ Usage example django-rest-framework.
 
 
 # Used packages for API
